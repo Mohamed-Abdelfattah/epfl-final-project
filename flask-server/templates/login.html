@@ -1,0 +1,46 @@
+{% extends 'auth.html' %} {% block head %}
+<title>Login</title>
+{% endblock %}
+<!--  -->
+{% block body %}
+
+<div class="container">
+  <h2 class="title">Log In</h2>
+
+  <form action="/login" method="post">
+    <div class="floating-label-group">
+      <input type="text" id="username" name="username" placeholder=" " />
+      <label for="username">Username</label>
+    </div>
+
+    <div class="floating-label-group">
+      <input type="password" id="password" name="password" placeholder=" " />
+      <label for="password">Password</label>
+    </div>
+
+    <button type="submit">Log In</button>
+  </form>
+</div>
+
+<!-- <h2>Login</h2>
+
+<form action="/login" method="post">
+  <div class="input-container">
+    <div class="input">
+      <input type="text" name="username" id="username" required />
+    </div>
+    <label class="label" for="username">
+      <div class="text">Username</div>
+    </label>
+  </div>
+
+  <div class="input-container">
+    <input type="password" name="password" id="password" required />
+    <label class="label" for="password">
+      <div class="text">Password</div>
+    </label>
+  </div>
+
+  <button type="submit">Login</button>
+</form> -->
+{% endblock %}

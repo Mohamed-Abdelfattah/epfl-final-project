@@ -1,0 +1,26 @@
+{% extends 'auth.html' %} {% block head %}
+<title>Sign up</title>
+{% endblock %}
+<!--  -->
+{% block body %}
+
+<h2>Sign up</h2>
+
+<form action="/signup" method="post">
+  <div class="input-container">
+    <input type="text" name="username" id="username" required />
+    <label class="label" for="username">
+      <div class="text">Username</div>
+    </label>
+  </div>
+
+  <div class="input-container">
+    <input type="password" name="password" id="password" required />
+    <label class="label" for="password">
+      <div class="text">Password</div>
+    </label>
+  </div>
+
+  <button type="submit">Sign up</button>
+</form>
+{% endblock %}

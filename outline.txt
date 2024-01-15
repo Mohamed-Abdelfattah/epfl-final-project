@@ -1,0 +1,57 @@
+Building an app to help trainees and trainers track progress, create activities, and share resources is a great idea. You'll need to consider several aspects:
+
+User Authentication: Secure login for trainees and trainers.
+User Roles and Permissions: Different features available for trainees and trainers.
+Progress Tracking: Functionality for tracking and visualizing progress over time.
+Activity Management: Tools for creating, assigning, and managing activities.
+Resource Sharing: A way to share training materials and resources.
+Here's a high-level overview of how you might structure such an app and some tools and frameworks you could use:
+
+Frontend:
+React: A JavaScript library for building user interfaces.
+React Router: For navigation within your React application.
+Redux or Context API: For state management.
+Material-UI or Bootstrap: For styled components and responsive design.
+Backend:
+Node.js with Express: For your server-side logic.
+MongoDB: A NoSQL database for storing user data, progress, and resources.
+Mongoose: An ODM library for MongoDB and Node.js.
+Passport: For handling user authentication.
+JWT (JSON Web Tokens): For secure transmission of user information.
+Workflow Example:
+User Authentication:
+
+Implement user signup and login
+Use Passport for authentication and JWT for session management
+User Roles and Permissions:
+
+Define roles for trainees and trainers
+Implement authorization to restrict access based on roles
+Progress Tracking:
+
+Create a model for tracking user progress
+Provide endpoints to update and retrieve progress data
+Use a charting library like Chart.js on the frontend for visualizations
+Activity Management:
+
+Implement CRUD operations for activities
+Allow trainers to create and assign activities to trainees
+Allow trainees to mark activities as complete
+Resource Sharing:
+
+Build a file upload/download system
+Use cloud storage like AWS S3 or GridFS with MongoDB for file storage
+Implement a resource sharing interface for users to access materials
+-----------------------------------------------------------------------------
+It is available on GitHub.
+It uses the Flask web framework.
+It uses at least one module from the Python Standard Library other than the random module (for example, you could use the datetime module.)
+It contains at least one class written by you that has both properties and methods. It uses __init__() to let the class initialize the object's properties (note that __init__() doesn't count as a method). This includes instantiating the class and using the methods in your app. Methods that only print something in the terminal will not be considered.
+It makes use of JavaScript in the front end and uses the localStorage of the web browser.
+It uses modern JavaScript (for example, let and const rather than var).
+It makes use of the writing to and reading from the same file feature.
+It contains both conditional statements and loops.
+It doesn't generate any error message even if the user enters a wrong input.
+It lets the user enter a value in a text box at some point. This value should be received and processed by your back end Python code.
+It is styled using CSS.
+The code follows the code and style conventions we introduced in the course, is fully documented using comments and doesn't contain unused or experimental code. In particular, the code should not use print() or console.log() for any information the app user should see. Instead, all user feedback needs to be visible in the browser.

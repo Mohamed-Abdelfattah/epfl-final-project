@@ -4,23 +4,46 @@
 <!--  -->
 {% block body %}
 
-<h2>Sign up</h2>
+<div class="container">
+  <h2 class="title">Sign Up</h2>
 
-<form action="/signup" method="post">
-  <div class="input-container">
-    <input type="text" name="username" id="username" required />
-    <label class="label" for="username">
-      <div class="text">Username</div>
-    </label>
+  <form action="/signup" method="post">
+    <div class="floating-label-group">
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder=" "
+        required
+      />
+      <label for="username">Username</label>
+    </div>
+
+    <div class="floating-label-group">
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder=" "
+        required
+      />
+      <label for="password">Password</label>
+    </div>
+
+    <div class="floating-label-group">
+      <select id="role" name="role" required>
+        <option value="" disabled selected></option>
+        <option value="trainee">Trainee</option>
+        <option value="trainer">Trainer</option>
+      </select>
+      <label for="role">Role</label>
+    </div>
+
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <div class="already">
+    <a href="/login">Already have an account?</a>
   </div>
-
-  <div class="input-container">
-    <input type="password" name="password" id="password" required />
-    <label class="label" for="password">
-      <div class="text">Password</div>
-    </label>
-  </div>
-
-  <button type="submit">Sign up</button>
-</form>
+</div>
 {% endblock %}

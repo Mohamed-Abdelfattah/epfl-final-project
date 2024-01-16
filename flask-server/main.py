@@ -1,9 +1,68 @@
-from flask import Flask,send_from_directory,render_template, request, redirect, url_for
+from flask import Flask,send_from_directory,render_template, request, redirect, url_for,session,jsonify
 import os
+from  hashlib import sha256
+from random import randint
 
 app = Flask(__name__, static_folder="../client/dist")
 
 
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+
+# Login Page
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        # Handle login logic 
+        user_name = request.form['username']
+        password = request.form['password']
+        user = validate_credentials(user_name, password)
+        # save the user id and role in the session if the user exists
+        if user['exists']:
+            session['user_id'] = user['id']
+            session['user_role'] = user['role']
+            # redirect to the Dashboard page 
+            return redirect(url_for('/dashboard'))
+        else:
+            error = 'Failed to login, wrong credentials.'
+            # view function which is handles the route can return up to 3 values (tuple), first is the response body, second is the status code, third is the headers. Flask interprets the tuple without the need to create a Response object
+            return render_template('login.html', error=error), 401
+    
+    # for GET requests
+    return render_template('login.html')
+
+# Signup Page
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        # Handle signup logic
+        user_name = request.form['username']
+        password = request.form['password']
+        role = request.form['role']
+        id = randint(100000000,999999999)
+        file = open('users.txt','a')
+        hashed_pass = simple_sha_hash(password)
+        file.write(f'{user_name} {hashed_pass} {id} {role}\n') 
+        file.close()
+        # save the user id and role in the session and redirect to the Dashboard page
+        session['user_id'] = id
+        session['user_role'] = role
+        return redirect(url_for('/dashboard'))
+    return render_template('signup.html')
+
+
+@app.route('/dashboard')
+def dashboard():
+    if "user_id" not in session:
+        return redirect(url_for('/login'))
+    
+    return send_from_directory(app.static_folder, 'index.html')
+
+
+# handle all other routes
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
@@ -12,24 +71,26 @@ def serve(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
-if __name__ == "__main__":
-    app.run(debug=True)
+
+
+def validate_credentials(name,password):
+    file = open('users.txt')
+    hashed_pass = simple_sha_hash(password)
+    for line in file:
+        [stored_username,stored_password,stored_id,stored_role] = line.split(' ')
+        if name == stored_username and hashed_pass == stored_password: 
+            return{ 'exists': True,'id':stored_id, 'role': stored_role}
+    return {'exists': False, 'role': None,'id':None}
 
 
 
+def simple_hash(word):
+    '''this is a very simple hashing function, will be used simulate the auth flow'''
+    hash = 0
+    for char in word:
+        hash += ord(char)
+    return hash
 
-# Login Page
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        # Handle login logic here
-        return redirect(url_for('serve'))
-    return render_template('login.html')
-
-# Signup Page
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        # Handle signup logic here
-        return redirect(url_for('serve'))
-    return render_template('signup.html')
+def simple_sha_hash(word):
+    '''this is simple hashing function, uses SHA256 function, will be used to simulate the auth flow'''
+    return sha256(word.encode('utf-8')).hexdigest()

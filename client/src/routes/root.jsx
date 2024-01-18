@@ -1,11 +1,13 @@
 import { Outlet } from "react-router-dom";
+import Footer from "../components/Footer";
 
 export default function Root() {
   return (
-    <div>
-      <a href="/login">login</a>
-      <h1>Root layout</h1>
-      <Outlet />
-    </div>
+    <>
+      <main className="flex h-full">
+        <Outlet />
+        <Footer />
+      </main>
+    </>
   );
 }

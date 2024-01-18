@@ -1,0 +1,5 @@
+trainers:[{id:string, name:string, photo_path:string, role:string, tracks:[id:string]}]
+
+tracks:[{id:string, title:string, start_time:string, duration:string, description:string, trainers:[id:string], trainees:[id:string], milestones:[{id:string, title:string, due_date:string, description:string}], resources:[{id:string, title:string, description:string, url:string}]}]
+
+trainees:[{id:string, name:string, photo_path:string, role:string, progress:[{track_id:string, percentage:number}]}]

@@ -55,3 +55,17 @@ It doesn't generate any error message even if the user enters a wrong input.
 It lets the user enter a value in a text box at some point. This value should be received and processed by your back end Python code.
 It is styled using CSS.
 The code follows the code and style conventions we introduced in the course, is fully documented using comments and doesn't contain unused or experimental code. In particular, the code should not use print() or console.log() for any information the app user should see. Instead, all user feedback needs to be visible in the browser.
+
+*********************************************************************
+prompt i used:
+I want to make a web app that lets trainers/instructors track trainees progress through trainings:
+
+there will be a dashboard which will show different views for the users based on their role (trainer or trainee)
+for trainers it will show trainings, trainees, and events
+trainers will be able to create a training and invite trainees to enroll and the training/group will have a title, description, start time, duration, trainees (to be added), events (to be added), and milestones for the training, resources to be shared with trainees (links for photos, videos, websites, articles)
+trainers will be able to see and overview for trainings and their progress, trainess and their progress throgh each training, events and their date.
+trainers will be able to see detailed veiws of each of the above.
+trainees will be able to enroll into trainings and see overview of their progress in each training, upcoming events, due dates (based on each training milestones), and resources list.
+trainees will be able to see detailed view of each of the above. here are my questions and please answer them in details: 1- how can i make the database for this. 2- how can i build the app using my current project setup of react and flask
+
+----------------------------------------------------------------------------

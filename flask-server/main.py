@@ -1,9 +1,17 @@
-from flask import Flask,send_from_directory,render_template, request, redirect, url_for,session,jsonify
+from flask import Flask,send_from_directory,render_template, request, redirect, url_for,session,jsonify, make_response
 import os
 from  hashlib import sha256
 from random import randint
+from flask_cors import CORS
 
+
+# Assuming `app` is your Flask application
 app = Flask(__name__, static_folder="../client/dist")
+
+app.secret_key = 'super_duper_secret_key_that_no_one_should_ever_know'
+
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+CORS(app, supports_credentials=True)
 
 
 if __name__ == "__main__":
@@ -25,13 +33,18 @@ def login():
             session['user_id'] = user['id']
             session['user_role'] = user['role']
             # redirect to the Dashboard page 
-            return redirect(url_for('/dashboard'))
+            # print('@signup ---- before redirect ---- session =',session)
+            return redirect(url_for('dashboard'))
         else:
             error = 'Failed to login, wrong credentials.'
             # view function which is handles the route can return up to 3 values (tuple), first is the response body, second is the status code, third is the headers. Flask interprets the tuple without the need to create a Response object
             return render_template('login.html', error=error), 401
     
     # for GET requests
+    if 'user_id' in session:
+        # the user is already logged in so he should be redirected to teh dashboard
+        return redirect(url_for('dashboard'))
+    
     return render_template('login.html')
 
 # Signup Page
@@ -50,12 +63,45 @@ def signup():
         # save the user id and role in the session and redirect to the Dashboard page
         session['user_id'] = id
         session['user_role'] = role
-        return redirect(url_for('/dashboard'))
+        # print('@signup ---- before redirect ---- session =',session)
+        return redirect(url_for('dashboard'))
+    
+    # for GET requests
+    if 'user_id' in session:
+        # the user is already logged in so he should be redirected to teh dashboard
+        return redirect(url_for('dashboard'))
+    
     return render_template('signup.html')
 
 
+
+@app.route('/logout')
+def logout():
+    # remove all is and role from session 
+    session.clear()
+    # redirect to the login page
+    return redirect(url_for('login'))
+
+
+@app.route('/api/dashboard')
+def api_dashboard():
+    print('@api/dashboard ------ session =',session)
+    for i in (request.headers.keys()):
+        print(i)
+        print(request.headers[i])
+    print(request.headers.keys())
+    if 'user_id' in session:
+        # get data from db 
+        return jsonify({'data': 'some data','another_data': 'another data'})
+    # unauthorized
+    return jsonify({'error': 'unauthorized'}), 401
+
 @app.route('/dashboard')
 def dashboard():
+    print('@dashboard ------ session =',session)
+    for i in (request.headers.keys()):
+        print(i)
+        print(request.headers[i])
     if "user_id" not in session:
         return redirect(url_for('/login'))
     
@@ -70,6 +116,7 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
+
 
 
 
@@ -94,3 +141,6 @@ def simple_hash(word):
 def simple_sha_hash(word):
     '''this is simple hashing function, uses SHA256 function, will be used to simulate the auth flow'''
     return sha256(word.encode('utf-8')).hexdigest()
+
+def simple_generate_token():
+    return str(randint(100000000,999999999))

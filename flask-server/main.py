@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder="../client/dist")
 
 app.secret_key = 'super_duper_secret_key_that_no_one_should_ever_know'
 
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+# app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 CORS(app, supports_credentials=True)
 
 
@@ -103,7 +103,7 @@ def dashboard():
         print(i)
         print(request.headers[i])
     if "user_id" not in session:
-        return redirect(url_for('/login'))
+        return redirect(url_for('login'))
     
     return send_from_directory(app.static_folder, 'index.html')
 

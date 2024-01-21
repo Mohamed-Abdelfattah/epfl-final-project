@@ -8,8 +8,13 @@ import {
 } from "react-router-dom";
 import Root from "./routes/root";
 import ErrorPage from "./routes/ErrorPage";
-import App from "./App";
+import LandingPage from "./routes/LandingPage";
 import Dashboard from "./routes/dashboard";
+import Overview from "./routes/dashboard/overview";
+import Tracks from "./routes/dashboard/tracks";
+import TrackDetails from "./routes/dashboard/tracks/trackDetails";
+import Trainees from "./routes/dashboard/trainees";
+import TraineeDetails from "./routes/dashboard/trainees/traineeDetails";
 import "./index.css";
 
 const router = createBrowserRouter(
@@ -19,23 +24,36 @@ const router = createBrowserRouter(
       element={<Root />}
       // loader={rootLoader}
       // action={rootAction}
-      // errorElement={<ErrorPage />}
+      errorElement={<ErrorPage />}
     >
-      <Route errorElement={<ErrorPage />}>
-        <Route index element={<App />} />
-        <Route
-          path="dashboard"
-          element={<Dashboard />}
-          // loader={contactLoader}
-          // action={contactAction}
+      <Route index element={<LandingPage />} />
+      <Route
+        path="dashboard"
+        element={<Dashboard />}
+        // loader={contactLoader}
+        // action={contactAction}
+      >
+        <Route errorElement={<ErrorPage />}>
+          {/* 
+          <Route
+          path="contacts/:contactId"
+          element={<Contact />}
+          loader={contactLoader}
+          action={contactAction}
         />
-        {/* <Route
+          <Route
           path="contacts/:contactId/edit"
           element={<EditContact />}
           loader={contactLoader}
           action={editAction}
-        />
+          />
         <Route path="contacts/:contactId/destroy" action={destroyAction} /> */}
+          <Route index path="overview" element={<Overview />} />
+          <Route path="tracks" element={<Tracks />} />
+          <Route path="tracks/:trackId" element={<TrackDetails />} />
+          <Route path="trainees" element={<Trainees />} />
+          <Route path="trainees/:traineeId" element={<TraineeDetails />} />
+        </Route>
       </Route>
     </Route>
   )

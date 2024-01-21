@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import Header from "../../components/Header";
+import Sidebar from "../../components/Sidebar";
 
 export default function Dashboard() {
-  const [count, setCount] = useState(0);
-
   // fetch data upon first render
   useEffect(() => {
     console.log(document.cookie);
@@ -21,10 +20,11 @@ export default function Dashboard() {
   return (
     <>
       <Sidebar />
-      <Header />
-      <p>count is {count}</p>
-      <button onClick={() => setCount(count + 1)}>+1</button>
-      <h1 className="text-3xl font-bold text-blue-500">Dashboard</h1>
+      {/* <!-- Content area --> */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Header />
+        <Outlet />
+      </div>
     </>
   );
 }

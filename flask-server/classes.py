@@ -59,6 +59,11 @@ class Track:
         self.milestones = milestones if milestones is not None else []  # List of Milestone objects with default of empty list
         self.resources = resources if resources is not None else []  # List of Resource objects with default of empty list
 
+    # convert to dictionary
+    def to_dict(self):
+        return {
+            "id": self.id, "title": self.title, "start_time": self.start_time, "duration": self.duration, "description": self.description, "trainers": self.trainers, "trainees": self.trainees, "milestones": self.milestones, "resources": self.resources 
+        }
     def add_trainer(self, trainer_id):
         if trainer_id not in self.trainers:
             self.trainers.append(trainer_id)

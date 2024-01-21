@@ -1,0 +1,83 @@
+{
+  "trainers": [
+    {
+      "id": "t1",
+      "name": "John Doe",
+      "photo_path": "/assets/flask-assets/imagesDB/male1.jpg",
+      "role": "Senior Trainer",
+      "tracks": ["track1", "track2"]
+    },
+    {
+      "id": "t2",
+      "name": "Jane Smith",
+      "photo_path": "/assets/flask-assets/imagesDB/female2.png",
+      "role": "Junior Trainer",
+      "tracks": ["track3"]
+    }
+  ],
+  "tracks": [
+    {
+      "id": "track1",
+      "title": "Web Development",
+      "start_time": "2023-04-01T10:00:00Z",
+      "duration": "6 weeks",
+      "description": "Learn the fundamentals of web development, from HTML to advanced JavaScript.",
+      "trainers": ["t1"],
+      "trainees": ["trainee1", "trainee2"],
+      "milestones": [
+        {
+          "id": "m1",
+          "title": "HTML/CSS Basics",
+          "due_date": "2023-04-07",
+          "description": "Understand the structure of web pages with HTML and style them using CSS."
+        },
+        {
+          "id": "m2",
+          "title": "JavaScript Fundamentals",
+          "due_date": "2023-04-14",
+          "description": "Learn the basics of programming with JavaScript."
+        }
+      ],
+      "resources": [
+        {
+          "id": "r1",
+          "title": "HTML for Beginners",
+          "description": "An introductory guide to HTML.",
+          "url": "https://example.com/html-guide"
+        },
+        {
+          "id": "r2",
+          "title": "CSS for Beginners",
+          "description": "A beginner's guide to cascading style sheets.",
+          "url": "https://example.com/css-guide"
+        }
+      ]
+    }
+  ],
+  "trainees": [
+    {
+      "id": "trainee1",
+      "name": "Alice Brown",
+      "photo_path": "//assets/flask-assets/imagesDB/female1.jpg",
+      "role": "Trainee",
+      "progress": [
+        {
+          "track_id": "track1",
+          "percentage": 50
+        }
+      ]
+    },
+    {
+      "id": "trainee2",
+      "name": "Bob Johnson",
+      "photo_path": "/assets/flask-assets/imagesDB/male2.png",
+      "role": "Trainee",
+      "progress": [
+        {
+          "track_id": "track1",
+          "percentage": 30
+        }
+      ]
+    }
+  ]
+}

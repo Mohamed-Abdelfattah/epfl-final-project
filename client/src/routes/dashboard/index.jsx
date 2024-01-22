@@ -18,13 +18,13 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <>
+    <div className="drawer lg:drawer-open">
+      <input type="checkbox" id="drawer" className="drawer-toggle" />
       <Sidebar />
-      {/* <!-- Content area --> */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="drawer-content">
         <Header />
         <Outlet />
       </div>
-    </>
+    </div>
   );
 }

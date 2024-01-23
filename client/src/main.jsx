@@ -9,13 +9,16 @@ import {
 import Root from "./routes/root";
 import ErrorPage from "./routes/ErrorPage";
 import LandingPage from "./routes/LandingPage";
-import Dashboard from "./routes/dashboard";
+import Dashboard, { loader as dashboardLoader } from "./routes/dashboard";
 import Overview from "./routes/dashboard/overview";
-import Tracks from "./routes/dashboard/tracks";
+import Tracks, { loader as tracksLoader } from "./routes/dashboard/tracks";
 import TrackDetails from "./routes/dashboard/tracks/trackDetails";
-import Trainees from "./routes/dashboard/trainees";
+import Trainees, {
+  loader as traineesLoader,
+} from "./routes/dashboard/trainees";
 import TraineeDetails from "./routes/dashboard/trainees/traineeDetails";
 import "./index.css";
+import { PageTitleProvider } from "./state/pageTitle/PageTitleContext";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,10 +30,12 @@ const router = createBrowserRouter(
       errorElement={<ErrorPage />}
     >
       <Route index element={<LandingPage />} />
+
       <Route
         path="dashboard"
         element={<Dashboard />}
-        // loader={contactLoader}
+        loader={dashboardLoader}
+
         // action={contactAction}
       >
         <Route errorElement={<ErrorPage />}>
@@ -48,10 +53,14 @@ const router = createBrowserRouter(
           action={editAction}
           />
         <Route path="contacts/:contactId/destroy" action={destroyAction} /> */}
-          <Route index path="overview" element={<Overview />} />
-          <Route path="tracks" element={<Tracks />} />
+          <Route path="overview" element={<Overview />} />
+          <Route path="tracks" element={<Tracks />} loader={tracksLoader} />
           <Route path="tracks/:trackId" element={<TrackDetails />} />
-          <Route path="trainees" element={<Trainees />} />
+          <Route
+            path="trainees"
+            element={<Trainees />}
+            loader={traineesLoader}
+          />
           <Route path="trainees/:traineeId" element={<TraineeDetails />} />
         </Route>
       </Route>
@@ -61,6 +70,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <PageTitleProvider>
+      <RouterProvider router={router} />
+    </PageTitleProvider>
   </React.StrictMode>
 );

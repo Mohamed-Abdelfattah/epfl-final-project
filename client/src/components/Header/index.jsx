@@ -1,6 +1,11 @@
+import { useLocation, useNavigation } from "react-router-dom";
 import ThemeSelector from "./ThemeSelector";
+import { useGetPageTitle } from "../../state/pageTitle/usePageTitle";
 
 export default function Header() {
+  //
+  const pageTitle = useGetPageTitle();
+
   return (
     <>
       <div className="bg-base-100 text-base-content sticky top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-shadow duration-100 [transform:translate3d(0,0,0)] shadow-sm">
@@ -31,7 +36,7 @@ export default function Header() {
 
             <div className="flex flex-1 justify-center">
               <span className="font-title text-base-content text-2xl">
-                {"{{Current View}}"}
+                {pageTitle}
               </span>
             </div>
 
@@ -45,7 +50,7 @@ export default function Header() {
                   </span>
                   <img
                     className="w-5"
-                    src="../../../public/logout-svgrepo-com.svg"
+                    src="../logout-svgrepo-com.svg"
                     alt="logout icon"
                   />
                 </button>

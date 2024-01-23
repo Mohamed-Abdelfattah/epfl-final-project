@@ -1,4 +1,10 @@
+import { useSetPageTitle } from "../../../state/pageTitle/usePageTitle";
+
 export default function Overview() {
+  //
+  // console.log("props: " + JSON.stringify(props));
+  useSetPageTitle();
+
   return (
     <main className="bg-gray-100 flex-1 overflow-x-hidden overflow-y-auto">
       <div className="container mx-auto px-4 py-4">

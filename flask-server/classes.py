@@ -1,3 +1,5 @@
+
+
 class User:
     def __init__(self, id, name, photo_path, role):
         self.id = id
@@ -46,6 +48,8 @@ class Trainee(User):
                 prog.percentage = new_percentage
                 return True
         return False  # Track not found in progress
+    
+    # ========================================================================================================= the plan was to represent all the data with classes after retrieving it from a sql database, but cause i used json file as a database, there is no need to use classes, but leaving the below classes to be used in case i changed to sql database =========================================================================================================
 
 class Track:
     def __init__(self, id, title, start_time, duration, description, trainers=None, trainees=None, milestones=None, resources=None):

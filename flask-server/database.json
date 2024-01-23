@@ -4,15 +4,15 @@
       "id": "t1",
       "name": "John Doe",
       "photo_path": "/assets/flask-assets/imagesDB/male1.jpg",
-      "role": "Senior Trainer",
+      "role": "trainer",
       "tracks": ["track1", "track2"]
     },
     {
       "id": "t2",
       "name": "Jane Smith",
       "photo_path": "/assets/flask-assets/imagesDB/female2.png",
-      "role": "Junior Trainer",
-      "tracks": ["track3"]
+      "role": "trainer",
+      "tracks": ["track2"]
     }
   ],
   "tracks": [
@@ -52,14 +52,37 @@
           "url": "https://example.com/css-guide"
         }
       ]
+    },
+    {
+      "id": "track2",
+      "title": "Data Science",
+      "start_time": "2023-05-01T10:00:00Z",
+      "duration": "8 weeks",
+      "description": "Explore data science fundamentals, including data analysis, machine learning, and data visualization.",
+      "trainers": ["t2"],
+      "trainees": ["trainee3", "trainee4"],
+      "milestones": [
+        {
+          "id": "m1",
+          "title": "Data Analysis with Python",
+          "due_date": "2023-05-08",
+          "description": "Learn how to analyze data using Python libraries like pandas and numpy."
+        },
+        {
+          "id": "m2",
+          "title": "Machine Learning Basics",
+          "due_date": "2023-05-15",
+          "description": "Get introduced to the core concepts of machine learning and build your first models."
+        }
+      ]
     }
   ],
   "trainees": [
     {
       "id": "trainee1",
       "name": "Alice Brown",
-      "photo_path": "//assets/flask-assets/imagesDB/female1.jpg",
-      "role": "Trainee",
+      "photo_path": "flask_assets/imagesDB/female1.jpg",
+      "role": "trainee",
       "progress": [
         {
           "track_id": "track1",
@@ -68,14 +91,46 @@
       ]
     },
     {
-      "id": "trainee2",
+      "id": "283737186",
       "name": "Bob Johnson",
-      "photo_path": "/assets/flask-assets/imagesDB/male2.png",
-      "role": "Trainee",
+      "photo_path": "flask_assets/imagesDB/male2.png",
+      "role": "trainee",
       "progress": [
         {
           "track_id": "track1",
           "percentage": 30
+        },
+        {
+          "track_id": "track2",
+          "percentage": 40
+        }
+      ]
+    },
+    {
+      "id": "trainee3",
+      "name": "Carol King",
+      "photo_path": "flask_assets/imagesDB/female2.jpg",
+      "role": "trainee",
+      "progress": [
+        {
+          "track_id": "track2",
+          "percentage": 60
+        },
+        {
+          "track_id": "track1",
+          "percentage": 30
+        }
+      ]
+    },
+    {
+      "id": "trainee4",
+      "name": "Dave Smith",
+      "photo_path": "flask_assets/imagesDB/male3.png",
+      "role": "trainee",
+      "progress": [
+        {
+          "track_id": "track2",
+          "percentage": 40
         }
       ]
     }

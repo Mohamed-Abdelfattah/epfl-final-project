@@ -4,10 +4,10 @@ import json
 from  hashlib import sha256
 from random import randint
 from flask_cors import CORS
-from classes import Track
+from classes import Track,User,Trainee,Trainer
 
 
-# Assuming `app` is your Flask application
+
 app = Flask(__name__, static_folder="../client/dist")
 
 app.secret_key = 'super_duper_secret_key_that_no_one_should_ever_know'
@@ -19,6 +19,13 @@ CORS(app, supports_credentials=True)
 if __name__ == "__main__":
     app.run(debug=True)
 
+
+
+# As the app is simple, i'll depend on flask session for the authentication and authorization: 
+# 1. save a secure session cookie in the browser upon login or signup, which will contain the values for user_id (for authentication) and role (for authorization) 
+# 2. send that cookie every time a request is made to the server to use the info within it for authorization and authentication 
+# 3. I won't cover all the possible cases and outputs of the apis for the sake of simplicity as all the routes will eb using 401 status code please note that:
+    # as per MDN the 401 status code is for unauthenticated requests and 403 is for forbidden (which is unauthorized) but cause this is a simple project and I'm not handling all the cases, I'll use 401 as status code for all the responses that fails authentication and authorization
 
 
 # Login Page
@@ -49,6 +56,7 @@ def login():
     
     return render_template('login.html')
 
+
 # Signup Page
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -65,7 +73,6 @@ def signup():
         # save the user id and role in the session and redirect to the Dashboard page
         session['user_id'] = id
         session['user_role'] = role
-        # print('@signup ---- before redirect ---- session =',session)
         return redirect(url_for('dashboard'))
     
     # for GET requests
@@ -79,35 +86,49 @@ def signup():
 
 @app.route('/logout')
 def logout():
-    # remove all is and role from session 
+    # remove id and role from session 
     session.clear()
     # redirect to the login page
     return redirect(url_for('login'))
 
 
-@app.route('/api/dashboard')
-def api_dashboard():
-    print('@api/dashboard ------ session =',session)
-    for i in (request.headers.keys()):
-        print(i)
-        print(request.headers[i])
-    print(request.headers.keys())
-    if 'user_id' in session:
-        # get data from db 
-        return jsonify({'data': 'some data','another_data': 'another data'})
-    # unauthorized
-    return jsonify({'error': 'unauthorized'}), 401
-
 @app.route('/dashboard')
 def dashboard():
     print('@dashboard ------ session =',session)
-    for i in (request.headers.keys()):
-        print(i)
-        print(request.headers[i])
     if "user_id" not in session:
         return redirect(url_for('login'))
     
     return send_from_directory(app.static_folder, 'index.html')
+
+
+
+@app.route('/api/dashboard')
+def api_dashboard():
+    # print('@api/dashboard ------ session =',session)
+    if 'user_id' in session: 
+        user_data = get_user(session['user_role'], session['user_id'])
+        if user_data is None:
+            return jsonify({'error': 'user not found'}), 404
+        # to cover EPFL project requirements an instance of class will be used to get profile info via a method
+        user = User(user_data['id'], user_data['name'], user_data['photo_path'], user_data['role'])
+        return jsonify({'data':user.get_profile_info()}), 200
+   
+    return jsonify({'error': 'unauthorized'}), 401
+
+def get_user(role, id):
+    with open('./database.json','r') as file:
+            data = json.load(file)
+    if role == 'trainer':
+        for record in data['trainers']:
+            if record['id'] == id:
+                return record
+    # won't handle the case where the role is neither trainer nor trainee as session asserts that role won't be tampered
+    else:
+        for record in data['trainees']:
+            if record['id'] == id:
+                return record
+    # user not found in database
+    return None
 
 
 # get all tracks
@@ -115,8 +136,7 @@ def dashboard():
 def api_get_tracks():
     # no need for authorization as both trainers ad trainees can view all tracks
     if not ('user_id' in session):
-        return jsonify({'error': 'unauthorized'}), 401
-    # get data from db
+        return jsonify({'error': 'unauthorized'}), 40
     with open('./database.json','r') as file:
         data = json.load(file)
     return jsonify({'data': data['tracks']})
@@ -125,8 +145,7 @@ def api_get_tracks():
 @app.route('/api/tracks/<id>', methods=['GET'])
 def api_get_track(id):
     if not ('user_id' in session):
-        return jsonify({'error': 'unauthorized'}), 401
-    # get data from db
+        return jsonify({'error': 'unauthorized'}), 40
     with open('./database.json','r') as file:
         data = json.load(file)
     for track in data['tracks']:

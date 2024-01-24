@@ -43,6 +43,8 @@ def login():
             session['user_role'] = user['role']
             # redirect to the Dashboard page 
             # print('@signup ---- before redirect ---- session =',session)
+            # if user['empty_profile']:
+            #     return redirect(url_for('profile'))
             return redirect(url_for('dashboard'))
         else:
             error = 'Failed to login, wrong credentials.'
@@ -61,19 +63,30 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        # Handle signup logic
+        # Handle signup logic, should have a logic that checks if the user already exists but for simplicity I'll just create a new user
         user_name = request.form['username']
         password = request.form['password']
         role = request.form['role']
         id = simple_generate_id()
         file = open('users.txt','a')
         hashed_pass = simple_sha_hash(password)
-        file.write(f'{user_name} {hashed_pass} {id} {role}\n') 
+        empty_profile = True
+        file.write(f'{user_name} {hashed_pass} {id} {role} {empty_profile} \n') 
         file.close()
+        # create an entry in database.json for the new user (a place holder that will be updated later)
+        with open('database.json', 'r') as f:
+            data = json.load(f)
+            if role == 'trainer':  
+                data['trainers'].append({'id': id,"name": "","photo_path": "","role": "trainer","tracks": []})
+            else:
+                data['trainees'].append({'id': id, "name": "","photo_path": "", "role": "", "progress": []})
+        with open('database.json', 'w') as f:
+            json.dump(data, f)
         # save the user id and role in the session and redirect to the Dashboard page
         session['user_id'] = id
         session['user_role'] = role
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('serve',path='profile'))
+        # return redirect(url_for('dashboard'))
     
     # for GET requests
     if 'user_id' in session:
@@ -258,9 +271,12 @@ def api_add_trainee_to_track(id):
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    print('@route handler for all other routes ------ path =',path )
     if path != "" and os.path.exists(app.static_folder + '/' + path):
+        print('@route handler for all other routes ------ path =',path ,"\n now should be serving asset")
         return send_from_directory(app.static_folder, path)
     else:
+        print('@route handler for all other routes ------ path =',path ,"\n now should be serving index.html")
         return send_from_directory(app.static_folder, 'index.html')
 
 
@@ -270,9 +286,9 @@ def validate_credentials(name,password):
     file = open('users.txt')
     hashed_pass = simple_sha_hash(password)
     for line in file:
-        [stored_username,stored_password,stored_id,stored_role] = line.split(' ')
+        [stored_username,stored_password,stored_id,stored_role,stored_empty_profile] = line.split(' ')
         if name == stored_username and hashed_pass == stored_password: 
-            return{ 'exists': True,'id':stored_id, 'role': stored_role}
+            return{ 'exists': True,'id':stored_id, 'role': stored_role,'empty_profile': stored_empty_profile}
     return {'exists': False, 'role': None,'id':None}
 
 

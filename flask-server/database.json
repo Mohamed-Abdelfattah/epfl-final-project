@@ -13,6 +13,35 @@
       "photo_path": "/assets/flask-assets/imagesDB/female2.png",
       "role": "trainer",
       "tracks": ["track2"]
+    },
+    { "id": "946766435" },
+    {
+      "id": "893893731",
+      "name": "",
+      "photo_path": "",
+      "role": "trainer",
+      "tracks": []
+    },
+    {
+      "id": "498757411",
+      "name": "",
+      "photo_path": "",
+      "role": "trainer",
+      "tracks": []
+    },
+    {
+      "id": "308089322",
+      "name": "",
+      "photo_path": "",
+      "role": "trainer",
+      "tracks": []
+    },
+    {
+      "id": "151144233",
+      "name": "",
+      "photo_path": "",
+      "role": "trainer",
+      "tracks": []
     }
   ],
   "tracks": [
@@ -81,58 +110,36 @@
     {
       "id": "trainee1",
       "name": "Alice Brown",
-      "photo_path": "flask_assets/imagesDB/female1.jpg",
+      "photo_path": "/flask_assets/imagesDB/female1.jpg",
       "role": "trainee",
-      "progress": [
-        {
-          "track_id": "track1",
-          "percentage": 50
-        }
-      ]
+      "progress": [{ "track_id": "track1", "percentage": 50 }]
     },
     {
       "id": "283737186",
       "name": "Bob Johnson",
-      "photo_path": "flask_assets/imagesDB/male2.png",
+      "photo_path": "/flask_assets/imagesDB/male2.png",
       "role": "trainee",
       "progress": [
-        {
-          "track_id": "track1",
-          "percentage": 30
-        },
-        {
-          "track_id": "track2",
-          "percentage": 40
-        }
+        { "track_id": "track1", "percentage": 30 },
+        { "track_id": "track2", "percentage": 40 }
       ]
     },
     {
       "id": "trainee3",
       "name": "Carol King",
-      "photo_path": "flask_assets/imagesDB/female2.jpg",
+      "photo_path": "/flask_assets/imagesDB/female2.jpg",
       "role": "trainee",
       "progress": [
-        {
-          "track_id": "track2",
-          "percentage": 60
-        },
-        {
-          "track_id": "track1",
-          "percentage": 30
-        }
+        { "track_id": "track2", "percentage": 60 },
+        { "track_id": "track1", "percentage": 30 }
       ]
     },
     {
       "id": "trainee4",
       "name": "Dave Smith",
-      "photo_path": "flask_assets/imagesDB/male3.png",
+      "photo_path": "/flask_assets/imagesDB/male3.png",
       "role": "trainee",
-      "progress": [
-        {
-          "track_id": "track2",
-          "percentage": 40
-        }
-      ]
+      "progress": [{ "track_id": "track2", "percentage": 40 }]
     }
   ]
 }

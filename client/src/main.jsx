@@ -19,6 +19,7 @@ import Trainees, {
 import TraineeDetails from "./routes/dashboard/trainees/traineeDetails";
 import "./index.css";
 import { PageTitleProvider } from "./state/pageTitle/PageTitleContext";
+import Profile from "./routes/profile";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,9 +28,17 @@ const router = createBrowserRouter(
       element={<Root />}
       // loader={rootLoader}
       // action={rootAction}
-      errorElement={<ErrorPage />}
+      errorElement={
+        <ErrorPage
+          message="you will be redirected soon..."
+          redirectPath={"/"}
+        />
+      }
     >
       <Route index element={<LandingPage />} />
+
+      {/* for now profile page will only be accessed once, when the user signs up or logs in without filing in the profile info */}
+      <Route path="profile" element={<Profile />} />
 
       <Route
         path="dashboard"
@@ -38,7 +47,11 @@ const router = createBrowserRouter(
 
         // action={contactAction}
       >
-        <Route errorElement={<ErrorPage />}>
+        <Route
+          errorElement={
+            <ErrorPage message="you can reload the page or navigate back" />
+          }
+        >
           {/* 
           <Route
           path="contacts/:contactId"

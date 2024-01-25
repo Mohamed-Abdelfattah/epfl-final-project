@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+ENV/
+
+# Flask instance folder
+instance/
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Database files
+*.db
+*.sqlite3
+
+# Session Files
+.flask_session/
+
+
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Package lock file for npm
+package-lock.json
+
+# Windows system files
+Thumbs.db

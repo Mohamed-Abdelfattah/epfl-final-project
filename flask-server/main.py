@@ -5,6 +5,7 @@ from  hashlib import sha256
 from random import randint
 from flask_cors import CORS
 from classes import Track,User,Trainee,Trainer
+from progress_calculator import calculate_progress
 
 
 
@@ -79,7 +80,7 @@ def signup():
             if role == 'trainer':  
                 data['trainers'].append({'id': id,"name": "","photo_path": "","role": "trainer","tracks": []})
             else:
-                data['trainees'].append({'id': id, "name": "","photo_path": "", "role": "", "progress": []})
+                data['trainees'].append({'id': id, "name": "","photo_path": "", "role": "trainee", "progress": []})
         with open('database.json', 'w') as f:
             json.dump(data, f)
         # save the user id and role in the session and redirect to the Dashboard page
@@ -108,7 +109,6 @@ def logout():
 # dashboard and profile routes can be accessed using the general handler @serve below but as I'm using flask session to protect routes I'll implement routes for them to assert protection before redirecting to the React SPA, to render the dashboard there will be api requests to get data, api will be protected by session and send errors, react-router have upper level error route that will redirect to the landing page, a bad design because of the final project time limitation 
 @app.route('/dashboard')
 def dashboard():
-    # print('@dashboard ------ session =',session)
     if "user_id" not in session:
         return redirect(url_for('login'))
     user = get_user(session['user_role'], session['user_id'])
@@ -137,7 +137,6 @@ def update_profile():
         return jsonify({'error': 'user not found'}), 404
     user_data['name'] = request.form['first_name'] + ' ' + request.form['last_name']
     user_data['photo_path'] = request.form['photo_path']
-    print('*-*-*-*-*-**-*-*-*-*-*-**-*-\n will update profile\n name =',request.form['first_name'], request.form['last_name'],'\nphoto_path =',request.form['photo_path'],'\n*-*-*-*-*-**-*-*-*-*-*-**-*-*-\n')
     update_ok = update_user_data(user_data)
     if update_ok:
         return redirect(url_for('dashboard'))
@@ -145,13 +144,10 @@ def update_profile():
         
     
 def update_user_data(new_data):
-    print('@update_user_data ------ new_data =',new_data)
     try:
         with open ('./database.json','r') as file:
             data = json.load(file)
-        print('@update_user_data ------ data =',data[new_data['role']+'s'])
         new_users_list = [user for user in data[new_data['role']+'s'] if user['id'] != new_data['id']]
-        print('@update_user_data ------ new_users_list =',new_users_list)
         new_users_list.append(new_data)
         data[new_data['role']+'s'] = new_users_list
         with open ('./database.json','w') as file:
@@ -163,7 +159,6 @@ def update_user_data(new_data):
 
 @app.route('/api/dashboard')
 def api_dashboard():
-    # print('@api/dashboard ------ session =',session)
     if 'user_id' in session: 
         user_data = get_user(session['user_role'], session['user_id'])
         if user_data is None:
@@ -195,7 +190,7 @@ def get_user(role, id):
 def api_get_tracks():
     # no need for authorization as both trainers ad trainees can view all tracks
     if not ('user_id' in session):
-        return jsonify({'error': 'unauthorized'}), 40
+        return jsonify({'error': 'unauthorized'}), 401
     with open('./database.json','r') as file:
         data = json.load(file)
     return jsonify({'data': data['tracks']})
@@ -204,7 +199,7 @@ def api_get_tracks():
 @app.route('/api/tracks/<id>', methods=['GET'])
 def api_get_track(id):
     if not ('user_id' in session):
-        return jsonify({'error': 'unauthorized'}), 40
+        return jsonify({'error': 'unauthorized'}), 401
     with open('./database.json','r') as file:
         data = json.load(file)
     for track in data['tracks']:
@@ -213,13 +208,44 @@ def api_get_track(id):
     return jsonify({'error': 'not found'}), 404
 
 
+# get overview
+@app.route('/api/overview', methods=['GET'])
+def api_get_overview():
+    if not ('user_id' in session):
+        return jsonify({'error': 'unauthorized'}), 401
+    with open('./database.json','r') as file:
+        data = json.load(file)
+    # overview = [{info:{name,id,percentage},trainees:[{name,id,progress}]}]
+    overview = []
+    for track in data['tracks']:
+        # calculate track progress
+        progress_percentage = calculate_progress(track['start_time'], track['duration_value'], track['duration_unit'])
+        # calculate trainees progress
+        trainees_progress = []
+        for trainee in data['trainees']:
+            if trainee['id'] not in track['trainees']:
+                continue
+            # loop over progress for each trainee cause he might be in multiple tracks
+            for item in trainee['progress']:
+                if item['track_id'] == track['id']:
+                    trainees_progress.append({'name':trainee['name'], 'id':trainee['id'],"photo_path":trainee['photo_path'], 'progress':item['percentage']})
+        # populate overview
+        overview.append({'info':{ "id": track['id'], 'progress_percentage':progress_percentage, 'title':track['title']}, 'trainees_progress':trainees_progress}) 
+    # should add error handling 
+    return jsonify({'data': overview}), 200        
+    
+
+
+
+    
+
 # add new track
 @app.route('/api/tracks', methods=['POST'])
 def api_add_track():
     if not ('user_id' in session and session['user_role'] == 'trainer'):
         return jsonify({'error': 'unauthorized'}), 401
     id = simple_generate_id()
-    new_track = Track(id, request.form['title'], request.form['start_time'], request.form['duration'], request.form['description'], request.form['trainers'], request.form['trainees'], request.form['milestones'], request.form['resources'])
+    new_track = Track(id, request.form['title'], request.form['start_time'], request.form['duration'], request.form['description'], [request.form['trainers']], [request.form['trainees']])
     # add new track to db, using 'with' keyword will assert that python closes the file after reading or writing to it
     with open('./database.json','r') as file:
         data = json.load(file)
@@ -239,9 +265,9 @@ def api_get_trainers():
     with open('./database.json','r') as file:
         data = json.load(file)
     track_id = request.args.get('track_id')
-    # should respond to the case where track_id is not valid, but as the api should be called from within the frontend app, i will assume that it is valid, but only to prevent runtime errors
+    # should respond to the case where track_id is not valid, but as the api should be called from within the frontend app, i will assume that it is valid, all the trainers will be returned if track_id is not provided (in case of new track)
     if track_id is None or track_id not in data['tracks']:
-        return jsonify({'error': 'Invalid track ID'}), 400
+        return jsonify({'data': data['trainers']}), 200
     return jsonify({'data': [trainer for trainer in data['trainers'] if trainer['id'] not in data['tracks'][track_id]['trainers']]}), 200
 
 
@@ -317,9 +343,7 @@ def api_add_trainee_to_track(id):
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    print('@route handler for all other routes ------ path =',path )
-    print('******************************',app.static_folder + '/' + path )
-    print('-------------------- app.static_folder =',app.static_folder)
+   
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         print('@route handler for all other routes ------ path =',path ,"\n now should be serving asset")
         return send_from_directory(app.static_folder, path)

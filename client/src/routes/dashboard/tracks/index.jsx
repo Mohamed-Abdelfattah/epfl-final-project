@@ -1,5 +1,6 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { useSetPageTitle } from "../../../state/pageTitle/usePageTitle";
+import TrackCard from "./TrackCard";
 
 export async function loader() {
   const { data } = await fetch(
@@ -16,10 +17,13 @@ export default function TracksList() {
   console.log("@tracksList ---- loader ---- tracks =", tracksList);
 
   return (
-    <div>
+    <section className="w-full flex flex-row flex-wrap">
       {tracksList.map((track) => (
-        <p key={track.id}>{track.title}</p>
+        <TrackCard key={track.id} {...track} />
       ))}
-    </div>
+      <Link to="/dashboard/tracks/add" className="btn btn-outline">
+        Add Track
+      </Link>
+    </section>
   );
 }

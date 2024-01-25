@@ -19,9 +19,12 @@ export default function Dashboard() {
     <div className="drawer lg:drawer-open">
       <input type="checkbox" id="drawer" className="drawer-toggle" />
       <Sidebar profileInfo={dashboardInfo} />
-      <div className="drawer-content divide-y-2 ">
+      <div className="drawer-content divide-y-2 " style={{ overflow: "auto" }}>
         <Header />
-        <Outlet />
+
+        <main className="bg-base-200 flex-1 overflow-x-hidden overflow-y-auto h-full">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

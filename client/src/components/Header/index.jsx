@@ -44,16 +44,16 @@ export default function Header() {
 
             <div className="flex items-center gap-2">
               <div className=" w-full max-w-sm flex">
-                <button className="btn">
+                <a className="btn" href="/logout">
                   <span className="hidden lg:inline-block transition-all">
                     Logout
                   </span>
                   <img
                     className="w-5"
-                    src="../logout-svgrepo-com.svg"
+                    src="/logout-svgrepo-com.svg"
                     alt="logout icon"
                   />
-                </button>
+                </a>
               </div>
             </div>
           </div>

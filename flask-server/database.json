@@ -1,181 +1,125 @@
 {
-    "trainers": [
+  "trainers": [
+    {
+      "id": "t1",
+      "name": "John Doe",
+      "photo_path": "/flask-assets/imagesDB/avatar-5.jpg",
+      "role": "trainer",
+      "tracks": ["track1", "track2"]
+    },
+    {
+      "id": "t2",
+      "name": "Jane Smith",
+      "photo_path": "/flask-assets/imagesDB/avatar-6.jpg",
+      "role": "trainer",
+      "tracks": ["track2"]
+    }
+  ],
+  "tracks": [
+    {
+      "id": "track1",
+      "title": "Web Development",
+      "start_time": "2023-04-01T10:00:00Z",
+      "duration_value": "30",
+      "duration_unit": "hours",
+      "description": "Learn the fundamentals of web development, from HTML to advanced JavaScript.",
+      "trainers": ["t1"],
+      "trainees": ["trainee1", "trainee2"],
+      "milestones": [
         {
-            "id": "t1",
-            "name": "John Doe",
-            "photo_path": "/flask-assets/imagesDB/male1.jpg",
-            "role": "trainer",
-            "tracks": [
-                "track1",
-                "track2"
-            ]
+          "id": "m1",
+          "title": "HTML/CSS Basics",
+          "due_date": "2023-04-07",
+          "description": "Understand the structure of web pages with HTML and style them using CSS."
         },
         {
-            "id": "t2",
-            "name": "Jane Smith",
-            "photo_path": "/flask-assets/imagesDB/female2.png",
-            "role": "trainer",
-            "tracks": [
-                "track2"
-            ]
-        },
-        {
-            "id": "997019107",
-            "name": "",
-            "photo_path": "",
-            "role": "trainer",
-            "tracks": []
-        },
-        {
-            "id": "889926261",
-            "name": "",
-            "photo_path": "",
-            "role": "trainer",
-            "tracks": []
-        },
-        {
-            "id": "572998259",
-            "name": "",
-            "photo_path": "",
-            "role": "trainer",
-            "tracks": []
-        },
-        {
-            "id": "334633581",
-            "name": "Mohamed Gamal",
-            "photo_path": "/flask_assets/imagesDB/avatar-2.jpg",
-            "role": "trainer",
-            "tracks": []
+          "id": "m2",
+          "title": "JavaScript Fundamentals",
+          "due_date": "2023-04-14",
+          "description": "Learn the basics of programming with JavaScript."
         }
-    ],
-    "tracks": [
+      ],
+      "resources": [
         {
-            "id": "track1",
-            "title": "Web Development",
-            "start_time": "2023-04-01T10:00:00Z",
-            "duration": "6 weeks",
-            "description": "Learn the fundamentals of web development, from HTML to advanced JavaScript.",
-            "trainers": [
-                "t1"
-            ],
-            "trainees": [
-                "trainee1",
-                "trainee2"
-            ],
-            "milestones": [
-                {
-                    "id": "m1",
-                    "title": "HTML/CSS Basics",
-                    "due_date": "2023-04-07",
-                    "description": "Understand the structure of web pages with HTML and style them using CSS."
-                },
-                {
-                    "id": "m2",
-                    "title": "JavaScript Fundamentals",
-                    "due_date": "2023-04-14",
-                    "description": "Learn the basics of programming with JavaScript."
-                }
-            ],
-            "resources": [
-                {
-                    "id": "r1",
-                    "title": "HTML for Beginners",
-                    "description": "An introductory guide to HTML.",
-                    "url": "https://example.com/html-guide"
-                },
-                {
-                    "id": "r2",
-                    "title": "CSS for Beginners",
-                    "description": "A beginner's guide to cascading style sheets.",
-                    "url": "https://example.com/css-guide"
-                }
-            ]
+          "id": "r1",
+          "title": "HTML for Beginners",
+          "description": "An introductory guide to HTML.",
+          "url": "https://example.com/html-guide"
         },
         {
-            "id": "track2",
-            "title": "Data Science",
-            "start_time": "2023-05-01T10:00:00Z",
-            "duration": "8 weeks",
-            "description": "Explore data science fundamentals, including data analysis, machine learning, and data visualization.",
-            "trainers": [
-                "t2"
-            ],
-            "trainees": [
-                "trainee3",
-                "trainee4"
-            ],
-            "milestones": [
-                {
-                    "id": "m1",
-                    "title": "Data Analysis with Python",
-                    "due_date": "2023-05-08",
-                    "description": "Learn how to analyze data using Python libraries like pandas and numpy."
-                },
-                {
-                    "id": "m2",
-                    "title": "Machine Learning Basics",
-                    "due_date": "2023-05-15",
-                    "description": "Get introduced to the core concepts of machine learning and build your first models."
-                }
-            ]
+          "id": "r2",
+          "title": "CSS for Beginners",
+          "description": "A beginner's guide to cascading style sheets.",
+          "url": "https://example.com/css-guide"
         }
-    ],
-    "trainees": [
+      ]
+    },
+    {
+      "id": "track2",
+      "title": "Data Science",
+      "start_time": "2024-01-01T10:00:00Z",
+      "duration_value": "6",
+      "duration_unit": "weeks",
+      "description": "Explore data science fundamentals, including data analysis, machine learning, and data visualization.",
+      "trainers": ["t2"],
+      "trainees": ["trainee3", "trainee4"],
+      "milestones": [
         {
-            "id": "trainee1",
-            "name": "Alice Brown",
-            "photo_path": "/flask_assets/imagesDB/female1.jpg",
-            "role": "trainee",
-            "progress": [
-                {
-                    "track_id": "track1",
-                    "percentage": 50
-                }
-            ]
+          "id": "m1",
+          "title": "Data Analysis with Python",
+          "due_date": "2023-05-08",
+          "description": "Learn how to analyze data using Python libraries like pandas and numpy."
         },
         {
-            "id": "283737186",
-            "name": "Bob Johnson",
-            "photo_path": "/flask_assets/imagesDB/male2.png",
-            "role": "trainee",
-            "progress": [
-                {
-                    "track_id": "track1",
-                    "percentage": 30
-                },
-                {
-                    "track_id": "track2",
-                    "percentage": 40
-                }
-            ]
-        },
-        {
-            "id": "trainee3",
-            "name": "Carol King",
-            "photo_path": "/flask_assets/imagesDB/female2.jpg",
-            "role": "trainee",
-            "progress": [
-                {
-                    "track_id": "track2",
-                    "percentage": 60
-                },
-                {
-                    "track_id": "track1",
-                    "percentage": 30
-                }
-            ]
-        },
-        {
-            "id": "trainee4",
-            "name": "Dave Smith",
-            "photo_path": "/flask_assets/imagesDB/male3.png",
-            "role": "trainee",
-            "progress": [
-                {
-                    "track_id": "track2",
-                    "percentage": 40
-                }
-            ]
+          "id": "m2",
+          "title": "Machine Learning Basics",
+          "due_date": "2023-05-15",
+          "description": "Get introduced to the core concepts of machine learning and build your first models."
         }
-    ]
+      ]
+    }
+  ],
+  "trainees": [
+    {
+      "id": "trainee1",
+      "name": "Alice Brown",
+      "photo_path": "/flask_assets/imagesDB/avatar-1.jpg",
+      "role": "trainee",
+      "progress": [{ "track_id": "track1", "percentage": 50 }]
+    },
+    {
+      "id": "283737186",
+      "name": "Bob Johnson",
+      "photo_path": "/flask_assets/imagesDB/avatar-2.jpg",
+      "role": "trainee",
+      "progress": [
+        { "track_id": "track1", "percentage": 30 },
+        { "track_id": "track2", "percentage": 40 }
+      ]
+    },
+    {
+      "id": "trainee3",
+      "name": "Carol King",
+      "photo_path": "/flask_assets/imagesDB/avatar-3.jpg",
+      "role": "trainee",
+      "progress": [
+        { "track_id": "track2", "percentage": 60 },
+        { "track_id": "track1", "percentage": 30 }
+      ]
+    },
+    {
+      "id": "trainee4",
+      "name": "Dave Smith",
+      "photo_path": "/flask_assets/imagesDB/avatar-4.jpg",
+      "role": "trainee",
+      "progress": [{ "track_id": "track2", "percentage": 40 }]
+    },
+    {
+      "id": "728863573",
+      "name": "",
+      "photo_path": "",
+      "role": "",
+      "progress": []
+    }
+  ]
 }

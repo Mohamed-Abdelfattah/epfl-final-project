@@ -10,9 +10,15 @@ import Root from "./routes/root";
 import ErrorPage from "./routes/ErrorPage";
 import LandingPage from "./routes/LandingPage";
 import Dashboard, { loader as dashboardLoader } from "./routes/dashboard";
-import Overview from "./routes/dashboard/overview";
+import Overview, {
+  loader as overviewLoader,
+} from "./routes/dashboard/overview";
 import Tracks, { loader as tracksLoader } from "./routes/dashboard/tracks";
 import TrackDetails from "./routes/dashboard/tracks/trackDetails";
+import AddTrack, {
+  action as addTrackAction,
+  loader as addTrackLoader,
+} from "./routes/dashboard/tracks/AddTrack";
 import Trainees, {
   loader as traineesLoader,
 } from "./routes/dashboard/trainees";
@@ -66,9 +72,16 @@ const router = createBrowserRouter(
           action={editAction}
           />
         <Route path="contacts/:contactId/destroy" action={destroyAction} /> */}
-          <Route index caseSensitive element={<Overview />} />
+          <Route index element={<Overview />} loader={overviewLoader} />
           <Route path="tracks" element={<Tracks />} loader={tracksLoader} />
+          <Route
+            path="tracks/add"
+            element={<AddTrack />}
+            loader={addTrackLoader}
+            action={addTrackAction}
+          />
           <Route path="tracks/:trackId" element={<TrackDetails />} />
+
           <Route
             path="trainees"
             element={<Trainees />}

@@ -17,7 +17,7 @@ export default function ThemeSelector() {
   return (
     <div className="dropdown ">
       <div tabIndex={0} role="button" className="btn m-1 transition-all">
-        <img className="w-5" src="../themes-svgrepo-com.svg" alt="theme icon" />
+        <img className="w-5" src="/themes-svgrepo-com.svg" alt="theme icon" />
         <span className="hidden lg:inline-block transition-all">Theme</span>
         <svg
           width="12px"

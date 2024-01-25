@@ -15,10 +15,16 @@ export default function TraineesList() {
   const traineesList = useLoaderData();
 
   return (
-    <div>
-      {traineesList.map((trainee) => (
-        <p key={trainee.id}>{trainee.name}</p>
-      ))}
+    <div className="container mx-auto px-4 py-4">
+      <section>
+        <h1>Trainees</h1>
+
+        <div>
+          {traineesList.map((trainee) => (
+            <p key={trainee.id}>{trainee.name}</p>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

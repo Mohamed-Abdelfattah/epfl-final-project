@@ -16,8 +16,6 @@ export default function ProfileInfo({ data }) {
         <h2 className="mt-2 mb-2 font-medium">{name}</h2>
         <h4>{role}</h4>
       </div>
-
-      <div className="divider"></div>
     </>
   );
 }

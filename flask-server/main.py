@@ -43,8 +43,9 @@ def login():
             session['user_role'] = user['role']
             # redirect to the Dashboard page 
             # print('@signup ---- before redirect ---- session =',session)
-            # if user['empty_profile']:
-            #     return redirect(url_for('profile'))
+            user_data = get_user(session['user_role'], session['user_id'])
+            if user_data['name'] == "":
+                return redirect(url_for('profile'))
             return redirect(url_for('dashboard'))
         else:
             error = 'Failed to login, wrong credentials.'
@@ -70,8 +71,7 @@ def signup():
         id = simple_generate_id()
         file = open('users.txt','a')
         hashed_pass = simple_sha_hash(password)
-        empty_profile = True
-        file.write(f'{user_name} {hashed_pass} {id} {role} {empty_profile} \n') 
+        file.write(f'{user_name} {hashed_pass} {id} {role} \n') 
         file.close()
         # create an entry in database.json for the new user (a place holder that will be updated later)
         with open('database.json', 'r') as f:
@@ -90,7 +90,7 @@ def signup():
     
     # for GET requests
     if 'user_id' in session:
-        # the user is already logged in so he should be redirected to teh dashboard
+        # the user is already logged in so he should be redirected to the dashboard
         return redirect(url_for('dashboard'))
     
     return render_template('signup.html')
@@ -105,14 +105,60 @@ def logout():
     return redirect(url_for('login'))
 
 
+# dashboard and profile routes can be accessed using the general handler @serve below but as I'm using flask session to protect routes I'll implement routes for them to assert protection before redirecting to the React SPA, to render the dashboard there will be api requests to get data, api will be protected by session and send errors, react-router have upper level error route that will redirect to the landing page, a bad design because of the final project time limitation 
 @app.route('/dashboard')
 def dashboard():
-    print('@dashboard ------ session =',session)
+    # print('@dashboard ------ session =',session)
     if "user_id" not in session:
         return redirect(url_for('login'))
-    
+    user = get_user(session['user_role'], session['user_id'])
+    if user['name'] == "":
+        return redirect(url_for('profile'))
     return send_from_directory(app.static_folder, 'index.html')
 
+# profile will be accessed only once
+@app.route('/profile')
+def profile():
+    if "user_id" not in session:
+        return redirect(url_for('login'))
+    user = get_user(session['user_role'], session['user_id'])
+    if user['name'] != "":
+        return redirect(url_for('dashboard'))
+    return send_from_directory(app.static_folder, 'index.html')
+
+# update trainer or trainee data in database
+@app.route('/api/profile', methods=['POST'])
+def update_profile():
+    if not ('user_id' in session) :
+        return jsonify({'error': 'unauthorized'}), 401
+    user_data = get_user(session['user_role'], session['user_id'])
+    if user_data is None:
+        # most probably this status code is wrong 
+        return jsonify({'error': 'user not found'}), 404
+    user_data['name'] = request.form['first_name'] + ' ' + request.form['last_name']
+    user_data['photo_path'] = request.form['photo_path']
+    print('*-*-*-*-*-**-*-*-*-*-*-**-*-\n will update profile\n name =',request.form['first_name'], request.form['last_name'],'\nphoto_path =',request.form['photo_path'],'\n*-*-*-*-*-**-*-*-*-*-*-**-*-*-\n')
+    update_ok = update_user_data(user_data)
+    if update_ok:
+        return redirect(url_for('dashboard'))
+    return jsonify({'error': 'failed to update profile'}), 500
+        
+    
+def update_user_data(new_data):
+    print('@update_user_data ------ new_data =',new_data)
+    try:
+        with open ('./database.json','r') as file:
+            data = json.load(file)
+        print('@update_user_data ------ data =',data[new_data['role']+'s'])
+        new_users_list = [user for user in data[new_data['role']+'s'] if user['id'] != new_data['id']]
+        print('@update_user_data ------ new_users_list =',new_users_list)
+        new_users_list.append(new_data)
+        data[new_data['role']+'s'] = new_users_list
+        with open ('./database.json','w') as file:
+            json.dump(data, file, indent=4)
+        return True
+    except:
+        False
 
 
 @app.route('/api/dashboard')
@@ -272,6 +318,8 @@ def api_add_trainee_to_track(id):
 @app.route('/<path:path>')
 def serve(path):
     print('@route handler for all other routes ------ path =',path )
+    print('******************************',app.static_folder + '/' + path )
+    print('-------------------- app.static_folder =',app.static_folder)
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         print('@route handler for all other routes ------ path =',path ,"\n now should be serving asset")
         return send_from_directory(app.static_folder, path)
@@ -281,14 +329,13 @@ def serve(path):
 
 
 
-
 def validate_credentials(name,password):
-    file = open('users.txt')
     hashed_pass = simple_sha_hash(password)
-    for line in file:
-        [stored_username,stored_password,stored_id,stored_role,stored_empty_profile] = line.split(' ')
-        if name == stored_username and hashed_pass == stored_password: 
-            return{ 'exists': True,'id':stored_id, 'role': stored_role,'empty_profile': stored_empty_profile}
+    with open('users.txt') as file:
+        for line in file:
+            [stored_username,stored_password,stored_id,stored_role] = line.split(' ')
+            if name == stored_username and hashed_pass == stored_password: 
+                return{ 'exists': True,'id':stored_id, 'role': stored_role}
     return {'exists': False, 'role': None,'id':None}
 
 

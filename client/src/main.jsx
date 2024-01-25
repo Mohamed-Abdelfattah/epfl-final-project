@@ -66,7 +66,7 @@ const router = createBrowserRouter(
           action={editAction}
           />
         <Route path="contacts/:contactId/destroy" action={destroyAction} /> */}
-          <Route path="overview" element={<Overview />} />
+          <Route index caseSensitive element={<Overview />} />
           <Route path="tracks" element={<Tracks />} loader={tracksLoader} />
           <Route path="tracks/:trackId" element={<TrackDetails />} />
           <Route

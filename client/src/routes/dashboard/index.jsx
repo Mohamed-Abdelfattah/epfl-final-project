@@ -19,7 +19,7 @@ export default function Dashboard() {
     <div className="drawer lg:drawer-open">
       <input type="checkbox" id="drawer" className="drawer-toggle" />
       <Sidebar profileInfo={dashboardInfo} />
-      <div className="drawer-content">
+      <div className="drawer-content ">
         <Header />
         <Outlet />
       </div>

@@ -4,7 +4,7 @@ function App() {
   //
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-gradient-to-r from-blue-400 to-indigo-600 text-white">
+    <div className="h-full w-full flex flex-col justify-center items-center bg-gradient-to-r from-blue-400 to-indigo-600 text-white">
       <div className="text-center mb-6">
         <p className="text-4xl md:text-5xl font-extrabold">
           Training Progress Tracker

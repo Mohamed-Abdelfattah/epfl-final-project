@@ -127,10 +127,7 @@ button:hover {
   width: 100%;
   border: none;
   border-bottom: 1px solid grey;
-  background-color: white; /* Ensures that the select has a white background */
-  -webkit-appearance: none; /* Removes default styling for select in some browsers */
-  -moz-appearance: none;
-  appearance: none;
+  background-color: white;
 }
 
 .floating-label-group select:focus {

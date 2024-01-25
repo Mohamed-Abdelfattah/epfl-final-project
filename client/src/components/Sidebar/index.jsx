@@ -16,7 +16,7 @@ export default function Sidebar({ profileInfo }) {
         <aside id="sidebar" className="bg-base-100 min-h-screen w-80 ">
           <ProfileInfo data={profileInfo} />
 
-          <div className="w-full divide-y-2 divide-y-reverse"></div>
+          <div className="divider divide-y-2 divide-y-reverse"></div>
 
           <ul className="menu px-4 py-0 ">
             <li>

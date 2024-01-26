@@ -14,7 +14,6 @@ export async function loader() {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  console.log("@action ---- formData =", updates);
   const res = await fetch(`${import.meta.env.VITE_API_URL_NUM}/api/tracks`, {
     method: "POST",
     headers: {

@@ -7,17 +7,7 @@ export default function ErrorPage({ message, redirectPath }) {
 
   useEffect(() => {
     if (redirectPath) {
-      console.log(
-        "@ErrorPage ---- useEffect ---- redirectPath =",
-        redirectPath
-      );
       const timeoutId = setTimeout(() => {
-        console.log(
-          "@ErrorPage ---- useEffect ---- timeoutId =",
-          timeoutId,
-          "about to navigate to",
-          redirectPath
-        );
         navigate(redirectPath);
       }, 3000);
 

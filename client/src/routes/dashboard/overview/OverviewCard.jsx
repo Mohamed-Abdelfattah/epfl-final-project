@@ -1,12 +1,7 @@
 import TraineeStats from "./TraineeStats";
 export default function OverviewCard({ info, trainees_progress }) {
   //
-  console.log(
-    "@OverviewCard ---- info =",
-    info,
-    "trainees_progress =",
-    trainees_progress
-  );
+
   return (
     <div className="flex flex-col space-y-4 ring-1 ring-gray-300 p-4">
       <div className="flex flex-row justify-between items-center">

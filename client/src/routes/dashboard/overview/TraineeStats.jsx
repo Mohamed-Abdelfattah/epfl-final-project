@@ -1,15 +1,5 @@
 export default function TraineeStats({ id, name, role, photo_path, progress }) {
   //
-  console.log(
-    "@TraineeStats ---- id =",
-    id,
-    "name =",
-    name,
-    "photo_path =",
-    photo_path,
-    "progress =",
-    progress
-  );
 
   return (
     <div className="stat">

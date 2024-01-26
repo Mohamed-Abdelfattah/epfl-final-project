@@ -3,7 +3,6 @@ import { useSetPageTitle } from "../../../state/pageTitle/usePageTitle";
 import OverviewCard from "./OverviewCard";
 
 export async function loader() {
-  console.log("overview loader");
   const { data } = await fetch(
     `${import.meta.env.VITE_API_URL_NUM}/api/overview`
   ).then((res) => res.json());
@@ -15,7 +14,6 @@ export default function Overview() {
 
   useSetPageTitle();
   const data = useLoaderData();
-  console.log("@Overview ---- loader ---- data =", data);
 
   return (
     <div className="container mx-auto px-4 py-4">

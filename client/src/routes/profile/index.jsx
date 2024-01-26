@@ -4,11 +4,9 @@ import { useState } from "react";
 export async function action({ request, params }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  console.log("@action ---- formData =", updates);
   const res = await fetch(`${import.meta.env.VITE_API_URL_NUM}/api/profile`, {
     method: "POST",
   }).then((res) => res.json());
-  console.log(res);
   // should check for errors and only redirect user to the dashboard if there aren't any
   // if(!res.ok || res.error){
   //   // show feedback to the user like a banner asking user to refresh and try again

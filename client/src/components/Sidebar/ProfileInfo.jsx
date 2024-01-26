@@ -1,6 +1,5 @@
 export default function ProfileInfo({ data }) {
   //
-  console.log("@ProfileInfo ---- data =", data);
   const { id, name, photo_path, role } = data;
 
   return (

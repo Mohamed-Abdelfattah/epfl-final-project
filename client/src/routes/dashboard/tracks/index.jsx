@@ -14,7 +14,6 @@ export default function TracksList() {
   //
   useSetPageTitle();
   const tracksList = useLoaderData();
-  console.log("@tracksList ---- loader ---- tracks =", tracksList);
 
   return (
     <section className="w-full flex flex-row flex-wrap">

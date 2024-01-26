@@ -43,7 +43,6 @@ def login():
             session['user_id'] = user['id']
             session['user_role'] = user['role']
             # redirect to the Dashboard page 
-            # print('@signup ---- before redirect ---- session =',session)
             user_data = get_user(session['user_role'], session['user_id'])
             if user_data['name'] == "":
                 return redirect(url_for('profile'))
@@ -345,10 +344,8 @@ def api_add_trainee_to_track(id):
 def serve(path):
    
     if path != "" and os.path.exists(app.static_folder + '/' + path):
-        print('@route handler for all other routes ------ path =',path ,"\n now should be serving asset")
         return send_from_directory(app.static_folder, path)
     else:
-        print('@route handler for all other routes ------ path =',path ,"\n now should be serving index.html")
         return send_from_directory(app.static_folder, 'index.html')
 
 

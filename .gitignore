@@ -12,7 +12,7 @@ instance/
 
 # PyInstaller
 build/
-dist/
+# dist/
 *.spec
 
 # Database files

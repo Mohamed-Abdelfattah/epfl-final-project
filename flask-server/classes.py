@@ -52,11 +52,12 @@ class Trainee(User):
     # ========================================================================================================= the plan was to represent all the data with classes after retrieving it from a sql database, but cause i used json file as a database, there is no need to use classes, but leaving the below classes to be used in case i changed to sql database =========================================================================================================
 
 class Track:
-    def __init__(self, id, title, start_time, duration, description, trainers=None, trainees=None, milestones=None, resources=None):
+    def __init__(self, id, title, start_time, duration_unit, duration_value, description, trainers=None, trainees=None, milestones=None, resources=None):
         self.id = id
         self.title = title
         self.start_time = start_time
-        self.duration = duration
+        self.duration_unit = duration_unit
+        self.duration_value = duration_value
         self.description = description
         self.trainers = trainers if trainers is not None else []  # This will be a list of trainer IDs with default of empty list
         self.trainees = trainees if trainees is not None else []  # This will be a list of trainee IDs with default of empty list
@@ -66,7 +67,7 @@ class Track:
     # convert to dictionary
     def to_dict(self):
         return {
-            "id": self.id, "title": self.title, "start_time": self.start_time, "duration": self.duration, "description": self.description, "trainers": self.trainers, "trainees": self.trainees, "milestones": self.milestones, "resources": self.resources 
+            "id": self.id, "title": self.title, "start_time": self.start_time, "duration": (self.duration_value + ' ' + self.duration_unit), "description": self.description, "trainers": self.trainers, "trainees": self.trainees, "milestones": self.milestones, "resources": self.resources 
         }
     def add_trainer(self, trainer_id):
         if trainer_id not in self.trainers:

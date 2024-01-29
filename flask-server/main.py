@@ -235,7 +235,6 @@ def api_get_overview():
     
 
 
-
     
 
 # add new track
@@ -243,8 +242,16 @@ def api_get_overview():
 def api_add_track():
     if not ('user_id' in session and session['user_role'] == 'trainer'):
         return jsonify({'error': 'unauthorized'}), 401
+
+    data = request.json
+    # Validate that all required fields are present
+    required_fields = ['title', 'start_time', 'duration_unit', 'duration_value', 'description', 'trainers', 'trainees']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({'error': f'Missing field: {field}'}), 400
+
     id = simple_generate_id()
-    new_track = Track(id, request.form['title'], request.form['start_time'], request.form['duration'], request.form['description'], [request.form['trainers']], [request.form['trainees']])
+    new_track = Track(id, data['title'], data['start_time'], data['duration_unit'], data['duration_value'], data['description'], [data['trainers']], [data['trainees']])
     # add new track to db, using 'with' keyword will assert that python closes the file after reading or writing to it
     with open('./database.json','r') as file:
         data = json.load(file)
@@ -354,7 +361,7 @@ def validate_credentials(name,password):
     hashed_pass = simple_sha_hash(password)
     with open('users.txt') as file:
         for line in file:
-            [stored_username,stored_password,stored_id,stored_role] = line.split(' ')
+            [stored_username,stored_password,stored_id,stored_role,_] = line.split(' ')
             if name == stored_username and hashed_pass == stored_password: 
                 return{ 'exists': True,'id':stored_id, 'role': stored_role}
     return {'exists': False, 'role': None,'id':None}

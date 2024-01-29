@@ -58,20 +58,6 @@ const router = createBrowserRouter(
             <ErrorPage message="you can reload the page or navigate back" />
           }
         >
-          {/* 
-          <Route
-          path="contacts/:contactId"
-          element={<Contact />}
-          loader={contactLoader}
-          action={contactAction}
-        />
-          <Route
-          path="contacts/:contactId/edit"
-          element={<EditContact />}
-          loader={contactLoader}
-          action={editAction}
-          />
-        <Route path="contacts/:contactId/destroy" action={destroyAction} /> */}
           <Route index element={<Overview />} loader={overviewLoader} />
           <Route path="tracks" element={<Tracks />} loader={tracksLoader} />
           <Route

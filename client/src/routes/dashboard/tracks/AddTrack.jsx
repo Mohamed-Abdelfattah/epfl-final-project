@@ -11,9 +11,12 @@ export async function loader() {
   return { trainers, trainees };
 }
 
-export async function action({ request, params }) {
+export async function action({ request }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
+  updates.trainers = formData.getAll("trainers");
+  updates.trainees = formData.getAll("trainees");
+  updates.start_time = new Date(updates.start_time).toISOString();
   const res = await fetch(`${import.meta.env.VITE_API_URL_NUM}/api/tracks`, {
     method: "POST",
     headers: {
@@ -21,10 +24,20 @@ export async function action({ request, params }) {
     },
     body: JSON.stringify(updates),
   }).then((res) => res.json());
+  console.log("@addTracks action ----- after submitting res =", res);
   // if (!res.ok) {
   //   return { error: true };
   // }
   return redirect("/tracks");
+  // console.log("@addTracks action ----- formData =");
+  // console.log(formData.get("start_time"), typeof formData.get("start_time"));
+  // console.log(formData.values());
+  // console.log(
+  //   "@addTracks action ----- updates.start_time =",
+  //   updates.start_time,
+  //   "type =",
+  //   typeof updates.start_time
+  // );
 }
 
 export default function AddTrack() {
@@ -74,6 +87,7 @@ export default function AddTrack() {
           type="datetime-local"
           placeholder="Start Time"
           className="input input-bordered w-full max-w-xs"
+          min={new Date().toISOString().substring(0, 16)}
           required
         />
 
@@ -131,7 +145,7 @@ export default function AddTrack() {
         </fieldset>
 
         <fieldset className="mb-4">
-          <legend className="label-text mb-2">Trainees</legend>
+          <legend className="label-text mb-2">Trainees:</legend>
 
           {trainees.map((trainee) => (
             <>

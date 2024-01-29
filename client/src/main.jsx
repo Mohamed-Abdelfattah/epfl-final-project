@@ -13,7 +13,10 @@ import Dashboard, { loader as dashboardLoader } from "./routes/dashboard";
 import Overview, {
   loader as overviewLoader,
 } from "./routes/dashboard/overview";
-import Tracks, { loader as tracksLoader } from "./routes/dashboard/tracks";
+import Tracks, {
+  loader as tracksLoader,
+  action as tracksAction,
+} from "./routes/dashboard/tracks";
 import TrackDetails from "./routes/dashboard/tracks/trackDetails";
 import AddTrack, {
   action as addTrackAction,
@@ -59,7 +62,12 @@ const router = createBrowserRouter(
           }
         >
           <Route index element={<Overview />} loader={overviewLoader} />
-          <Route path="tracks" element={<Tracks />} loader={tracksLoader} />
+          <Route
+            path="tracks"
+            element={<Tracks />}
+            loader={tracksLoader}
+            action={tracksAction}
+          />
           <Route
             path="tracks/add"
             element={<AddTrack />}

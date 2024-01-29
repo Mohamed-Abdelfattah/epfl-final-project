@@ -1,9 +1,19 @@
+import { useUserContext } from "../../state/user/userContext";
 import { NavLink } from "react-router-dom";
 import ProfileInfo from "./ProfileInfo";
+import { useEffect } from "react";
 
 export default function Sidebar({ profileInfo }) {
   //
-  const { role } = profileInfo;
+  const { role, id } = profileInfo;
+  const { changeUser } = useUserContext();
+  console.log("@Sidebar ---- role =", role, "id =", id);
+  console.log("change user function =", changeUser, changeUser.toString());
+  // changeUser({ role, id });
+
+  useEffect(() => {
+    changeUser({ role, id });
+  }, [role, id, changeUser]);
 
   return (
     <>

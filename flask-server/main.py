@@ -361,7 +361,7 @@ def validate_credentials(name,password):
     hashed_pass = simple_sha_hash(password)
     with open('users.txt') as file:
         for line in file:
-            [stored_username,stored_password,stored_id,stored_role,_] = line.split(' ')
+            [stored_username,stored_password,stored_id,stored_role, _] = line.split(' ')
             if name == stored_username and hashed_pass == stored_password: 
                 return{ 'exists': True,'id':stored_id, 'role': stored_role}
     return {'exists': False, 'role': None,'id':None}

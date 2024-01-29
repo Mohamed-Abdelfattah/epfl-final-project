@@ -10,12 +10,6 @@ export function UserContextProvider({ children }) {
   const [user, setUser] = useState({ role: "null", id: "null" });
 
   function changeUser(newUser) {
-    console.log(
-      "@UserContextProvider ----- changeUser function ---- user =",
-      user,
-      "----- newUser =",
-      newUser
-    );
     setUser((prevUser) => ({ ...prevUser, ...newUser }));
   }
 

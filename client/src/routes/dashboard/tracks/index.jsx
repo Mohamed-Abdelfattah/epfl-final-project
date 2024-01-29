@@ -1,6 +1,7 @@
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, redirect } from "react-router-dom";
 import { useSetPageTitle } from "../../../state/pageTitle/usePageTitle";
 import TrackCard from "./TrackCard";
+import { useUserContext } from "../../../state/user/userContext";
 
 export async function loader({ request, response }) {
   const { data } = await fetch(
@@ -10,22 +11,37 @@ export async function loader({ request, response }) {
   return data;
 }
 
-export async function action({ request, response }) {
+export async function action({ request, params }) {
   const formData = await request.formData();
-  const intent = formData.get("intent");
+  const role = formData.get("role");
+  const trackId = formData.get("trackId");
+  const userId = formData.get("userId");
+  const method = request.method;
 
-  if (intent === "enroll") {
-    // enroll trainee, will be triggered by trainee from the tracks cards list
-  }
+  console.log(
+    "@Tracks action ----- trackId =",
+    trackId,
+    "userId =",
+    userId,
+    "method =",
+    method
+  );
 
-  if (intent === "unassign") {
-    // will delete the track, will be triggered by trainer from the tracks cards list or the details page
-  }
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL_NUM}/api/${trackId}/${role}/${userId}`,
+    {
+      method,
+    }
+  ).then((res) => res.json());
+  console.log("@Tracks action ----- res =", res);
+
+  return redirect("/dashboard/tracks");
 }
 
 export default function TracksList() {
   //
   useSetPageTitle();
+  const { user } = useUserContext();
   const tracksList = useLoaderData();
 
   return (
@@ -33,9 +49,13 @@ export default function TracksList() {
       {tracksList.map((track) => (
         <TrackCard key={track.id} {...track} />
       ))}
-      <Link to="/dashboard/tracks/add" className="btn btn-outline">
-        Add Track
-      </Link>
+      {user.role === "trainer" ? (
+        <Link to="/dashboard/tracks/add" className="btn btn-outline">
+          Add Track
+        </Link>
+      ) : (
+        <></>
+      )}
     </section>
   );
 }

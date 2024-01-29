@@ -28,7 +28,7 @@ export async function action({ request }) {
   // if (!res.ok) {
   //   return { error: true };
   // }
-  return redirect("/tracks");
+  return redirect("/dashboard/tracks");
   // console.log("@addTracks action ----- formData =");
   // console.log(formData.get("start_time"), typeof formData.get("start_time"));
   // console.log(formData.values());

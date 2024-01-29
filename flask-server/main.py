@@ -219,6 +219,8 @@ def api_get_overview():
     for track in data['tracks']:
         # calculate track progress
         progress_percentage = calculate_progress(track['start_time'], track['duration_value'], track['duration_unit'])
+        if progress_percentage < 0:
+            progress_percentage = 0
         # calculate trainees progress
         trainees_progress = []
         for trainee in data['trainees']:
@@ -242,25 +244,100 @@ def api_get_overview():
 def api_add_track():
     if not ('user_id' in session and session['user_role'] == 'trainer'):
         return jsonify({'error': 'unauthorized'}), 401
-
     data = request.json
     # Validate that all required fields are present
     required_fields = ['title', 'start_time', 'duration_unit', 'duration_value', 'description', 'trainers', 'trainees']
     for field in required_fields:
         if field not in data:
             return jsonify({'error': f'Missing field: {field}'}), 400
-
     id = simple_generate_id()
-    new_track = Track(id, data['title'], data['start_time'], data['duration_unit'], data['duration_value'], data['description'], [data['trainers']], [data['trainees']])
+    new_track = Track(id, data['title'], data['start_time'], data['duration_unit'], data['duration_value'], data['description'], data['trainers'], data['trainees'])
     # add new track to db, using 'with' keyword will assert that python closes the file after reading or writing to it
     with open('./database.json','r') as file:
-        data = json.load(file)
-    data['tracks'].append(new_track.to_dict())
+        database = json.load(file)
+    database['tracks'].append(new_track.to_dict())
+    # should use update_status to check if the data was added correctly or not
+    # add new track to trainers
+    new_trainers_list,update_status = add_track_to_trainer(database['trainers'], id, data['trainers'])
+    database['trainers'] = new_trainers_list
+    # add new track to trainees 
+    new_trainees_list,update_status = add_track_to_trainee(database['trainees'], id, data['trainees'])
+    database['trainees'] = new_trainees_list
     with open('./database.json','w') as file:
-        json.dump(data, file, indent=4)
+        json.dump(database, file, indent=4)
     # return success, should implement a way to check if the data was added correctly or not and return fail status if not
     return jsonify({'success': True}),201
+
+
+
+# for a trainer or trainee to add himself to a track
+@app.route('/api/<track_id>/<role>/<user_id>', methods=['POST'])
+def api_add_user_to_track(track_id, role, user_id):
+    if not ('user_id' in session and session['user_role'] == role):
+        return jsonify({'error': 'unauthorized'}), 401
+    with open('./database.json','r') as file:
+        data = json.load(file)
+    # add user to a track
+    new_tracks_list,is_track_updated = add_user_to_track(data['tracks'], track_id, user_id,role)
+    data['tracks'] = new_tracks_list
+    if not is_track_updated:
+        return jsonify({'error': 'invalid track'}), 400
+    # add track to a user
+    if role == 'trainer':
+        new_trainers_list,update_status = add_track_to_trainer(data['trainers'], track_id, [user_id])
+        data['trainers'] = new_trainers_list
+    elif role == 'trainee':
+        new_trainees_list,update_status = add_track_to_trainee(data['trainees'], track_id, [user_id])
+        data['trainees'] = new_trainees_list
+    else:
+        return jsonify({'error': 'invalid user'}), 400
+    # write changes to db
+    print('============================================\n')
+    print(type(data))
+    print('============================================\n')
+    with open('./database.json','w') as file:
+        json.dump(data, file, indent=4)
+    return jsonify({'success': True}),201
     
+
+# for a trainer or trainee to remove himself from a track
+@app.route('/api/<track_id>/<role>/<user_id>', methods=['DELETE'])
+def api_remove_user_from_track(track_id, role, user_id):
+    if not ('user_id' in session and session['user_role'] == role):
+        return jsonify({'error': 'unauthorized'}), 401
+    with open('./database.json','r') as file:
+        data = json.load(file)
+    # remove user from a track
+    is_track_updated = False
+    for track in data['tracks']:
+        if track['id'] == track_id:                
+            track[role+'s'].remove(user_id)
+            is_track_updated = True
+            break
+    if not is_track_updated:
+        return jsonify({'error': 'invalid track'}), 400
+    # remove track from a user
+    if role == 'trainer':
+        for trainer in data['trainers']:
+            if trainer['id'] == user_id:
+                trainer['tracks'].remove(track_id)
+    elif role == 'trainee':
+        for trainee in data['trainees']:
+            if trainee['id'] != user_id: 
+                continue 
+            for track in trainee['progress']:
+                if track['track_id'] == track_id:
+                    trainee['progress'].remove(track)
+                    break
+    else:
+        return jsonify({'error': 'invalid user'}), 400
+    
+    # write changes to db
+    with open('./database.json','w') as file:
+        json.dump(data, file, indent=4)
+    return jsonify({'success': True}),201
+    
+        
 
 
 # get list of trainers who are not assigned to a track, the api intended to be called while assigning trainers to a track by another trainer and using the track_id in the track card from within the frontend app
@@ -354,6 +431,39 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
+
+
+
+
+def add_track_to_trainer(list_to_be_modified, track_id, trainers_id_list):
+    updated = False        
+    for trainer in list_to_be_modified:
+        if trainer['id'] in trainers_id_list:
+            trainer['tracks'].append(track_id)
+            updated = True
+    return list_to_be_modified, updated
+
+def add_track_to_trainee(list_to_be_modified, track_id, trainees_id_list):
+    updated = False
+    for trainee in list_to_be_modified:
+        if trainee['id'] in trainees_id_list:  
+            print('*******************\n will update database[trainees] ------ trainee[progress]',trainee['progress'])
+            trainee['progress'].append({'track_id':track_id,'percentage':0})
+            print('*******************\n after update database[trainees] ------ trainee[progress]',trainee['progress'])
+            updated = True
+    return list_to_be_modified, updated
+        
+
+
+def add_user_to_track(list_to_be_modified, track_id,user_id,role):
+    updated = False
+    for track in list_to_be_modified:
+        if track['id'] == track_id:                
+            track[role+'s'].append(user_id)
+            updated = True
+            break
+    return list_to_be_modified, updated
+
 
 
 

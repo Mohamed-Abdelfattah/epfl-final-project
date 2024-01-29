@@ -67,7 +67,7 @@ class Track:
     # convert to dictionary
     def to_dict(self):
         return {
-            "id": self.id, "title": self.title, "start_time": self.start_time, "duration": (self.duration_value + ' ' + self.duration_unit), "description": self.description, "trainers": self.trainers, "trainees": self.trainees, "milestones": self.milestones, "resources": self.resources 
+            "id": self.id, "title": self.title, "start_time": self.start_time, "duration_unit": self.duration_unit, "duration_value": self.duration_value,  "description": self.description, "trainers": self.trainers, "trainees": self.trainees, "milestones": self.milestones, "resources": self.resources 
         }
     def add_trainer(self, trainer_id):
         if trainer_id not in self.trainers:

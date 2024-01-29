@@ -7,13 +7,10 @@ export default function Sidebar({ profileInfo }) {
   //
   const { role, id } = profileInfo;
   const { changeUser } = useUserContext();
-  console.log("@Sidebar ---- role =", role, "id =", id);
-  console.log("change user function =", changeUser, changeUser.toString());
-  // changeUser({ role, id });
 
   useEffect(() => {
     changeUser({ role, id });
-  }, [role, id, changeUser]);
+  }, []);
 
   return (
     <>

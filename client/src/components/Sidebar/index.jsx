@@ -28,7 +28,6 @@ export default function Sidebar({ profileInfo }) {
           <ul className="menu px-4 py-0 ">
             <li>
               <NavLink
-                // defaultChecked
                 to={""}
                 end
                 className={({ isActive }) => {

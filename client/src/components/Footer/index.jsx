@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Footer() {
   return (
     <footer className="g-gray-100 p-4 shadow mt-auto">

@@ -1,9 +1,0 @@
-readme  to include build instructions 
-check add tracks 
-server never fails 
-method no.2 
-update readme to include modules library modules name 
-remove all commented code 
-summarize comments
-ensure that there is validation for user inputs in the frontend (using placeholder and input types)
-hide trainers selection and trainees from the track creation

@@ -35,8 +35,6 @@ const router = createBrowserRouter(
     <Route
       path="/"
       element={<Root />}
-      // loader={rootLoader}
-      // action={rootAction}
       errorElement={
         <ErrorPage
           message="you will be redirected soon..."
@@ -46,16 +44,9 @@ const router = createBrowserRouter(
     >
       <Route index element={<LandingPage />} />
 
-      {/* for now profile page will only be accessed once, when the user signs up or logs in without filing in the profile info */}
       <Route path="profile" element={<Profile />} />
 
-      <Route
-        path="dashboard"
-        element={<Dashboard />}
-        loader={dashboardLoader}
-
-        // action={contactAction}
-      >
+      <Route path="dashboard" element={<Dashboard />} loader={dashboardLoader}>
         <Route
           errorElement={
             <ErrorPage message="you can reload the page or navigate back" />

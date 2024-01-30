@@ -27,9 +27,10 @@
             "photo_path": "/flask_assets/imagesDB/avatar-8.jpg",
             "role": "trainer",
             "tracks": [
-                "track1",
                 "track2",
-                "641023372"
+                "641023372",
+                "track1",
+                "590689979"
             ]
         },
         {
@@ -38,7 +39,8 @@
             "photo_path": "/flask_assets/imagesDB/avatar-6.jpg",
             "role": "trainer",
             "tracks": [
-                "641023372"
+                "641023372",
+                "590689979"
             ]
         }
     ],
@@ -56,7 +58,8 @@
             ],
             "trainees": [
                 "trainee1",
-                "trainee2"
+                "trainee2",
+                "529905125"
             ],
             "milestones": [
                 {
@@ -101,7 +104,8 @@
             "trainees": [
                 "trainee3",
                 "trainee4",
-                "529905125"
+                "529905125",
+                "841233099"
             ],
             "milestones": [
                 {
@@ -129,7 +133,8 @@
                 "t1"
             ],
             "trainees": [
-                "529905125"
+                "529905125",
+                "841233099"
             ],
             "milestones": [],
             "resources": []
@@ -149,7 +154,28 @@
             "trainees": [
                 "trainee1",
                 "trainee4",
-                "529905125"
+                "529905125",
+                "841233099"
+            ],
+            "milestones": [],
+            "resources": []
+        },
+        {
+            "id": "590689979",
+            "title": "final test",
+            "start_time": "2024-02-09T15:02:00.000Z",
+            "duration_unit": "days",
+            "duration_value": "90",
+            "description": "final test",
+            "trainers": [
+                "626763029",
+                "489121943"
+            ],
+            "trainees": [
+                "trainee1",
+                "trainee4",
+                "529905125",
+                "841233099"
             ],
             "milestones": [],
             "resources": []
@@ -168,6 +194,10 @@
                 },
                 {
                     "track_id": "641023372",
+                    "percentage": 0
+                },
+                {
+                    "track_id": "590689979",
                     "percentage": 0
                 }
             ]
@@ -225,6 +255,10 @@
                 {
                     "track_id": "641023372",
                     "percentage": 0
+                },
+                {
+                    "track_id": "590689979",
+                    "percentage": 0
                 }
             ]
         },
@@ -245,6 +279,38 @@
                 {
                     "track_id": "641023372",
                     "percentage": 90
+                },
+                {
+                    "track_id": "track1",
+                    "percentage": 90
+                },
+                {
+                    "track_id": "590689979",
+                    "percentage": 0
+                }
+            ]
+        },
+        {
+            "id": "841233099",
+            "name": "Ko Ko",
+            "photo_path": "/flask_assets/imagesDB/avatar-2.jpg",
+            "role": "trainee",
+            "progress": [
+                {
+                    "track_id": "track2",
+                    "percentage": 0
+                },
+                {
+                    "track_id": "151733965",
+                    "percentage": 0
+                },
+                {
+                    "track_id": "641023372",
+                    "percentage": 0
+                },
+                {
+                    "track_id": "590689979",
+                    "percentage": 56
                 }
             ]
         }

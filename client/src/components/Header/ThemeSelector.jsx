@@ -1,12 +1,10 @@
 import React from "react";
-// import { savedTheme } from "../../../dist/themeHandler";
 
 export default function ThemeSelector() {
   // script will be added after the component get mounted so that the script can find the elements to manipulate to change theme
   React.useEffect(() => {
     const script = document.createElement("script");
     script.src = "/themeHandler.js";
-    // script.defer = true;
     document.body.appendChild(script);
 
     return () => {

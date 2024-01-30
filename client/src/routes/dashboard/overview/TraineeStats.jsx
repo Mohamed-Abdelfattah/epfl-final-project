@@ -5,7 +5,6 @@ export default function TraineeStats({ id, name, role, photo_path, progress }) {
     <div className="stat">
       <div className="stat-figure text-secondary">
         <div className="avatar ">
-          {/* online */}
           <div className="w-16 rounded-full">
             <img src={photo_path} alt="User Avatar" />
           </div>

@@ -7,17 +7,12 @@ export async function action({ request, params }) {
   const res = await fetch(`${import.meta.env.VITE_API_URL_NUM}/api/profile`, {
     method: "POST",
   }).then((res) => res.json());
-  // should check for errors and only redirect user to the dashboard if there aren't any
-  // if(!res.ok || res.error){
-  //   // show feedback to the user like a banner asking user to refresh and try again
-  // }
 }
 
 export default function Profile() {
   // State to keep track of the selected image
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Dummy image array if none provided
   const imagePathArray = Array.from(
     { length: 8 },
     (_, i) => `/flask_assets/imagesDB/avatar-${i + 1}.jpg`
@@ -58,24 +53,6 @@ export default function Profile() {
             />
           </div>
         </div>
-
-        {/* <div className="flex flex-row justify-start space-x-6 w-full mt-4 mb-4">
-          <label className="label ">
-            <span className="label-text font-medium">Role:</span>
-          </label>
-          <select
-            className="select select-bordered w-1/2"
-            name="role"
-            id="role"
-            required
-          >
-            <option disabled selected>
-              Pick one
-            </option>
-            <option value="trainer">Trainer</option>
-            <option value="trainee">Trainee</option>
-          </select>
-        </div> */}
 
         <div className="form-control w-full my-4">
           <label className="label">

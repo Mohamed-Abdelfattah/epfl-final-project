@@ -26,9 +26,7 @@ if __name__ == "__main__":
 # As the app is simple, i'll depend on flask session for the authentication and authorization: 
 # 1. save a secure session cookie in the browser upon login or signup, which will contain the values for user_id (for authentication) and role (for authorization) 
 # 2. send that cookie every time a request is made to the server to use the info within it for authorization and authentication 
-# 3. I won't cover all the possible cases and outputs of the apis for the sake of simplicity as all the routes will eb using 401 status code please note that:
-    # as per MDN the 401 status code is for unauthenticated requests and 403 is for forbidden (which is unauthorized) but cause this is a simple project and I'm not handling all the cases, I'll use 401 as status code for all the responses that fails authentication and authorization
-
+# 3. I won't cover all the possible cases and outputs of the apis for the sake of simplicity as all the routes will eb using 401 status code.
 
 # Login Page
 @app.route('/login', methods=['GET', 'POST'])
@@ -50,14 +48,12 @@ def login():
             return redirect(url_for('dashboard'))
         else:
             error = 'Failed to login, wrong credentials.'
-            # view function which is handles the route can return up to 3 values (tuple), first is the response body, second is the status code, third is the headers. Flask interprets the tuple without the need to create a Response object
             return render_template('login.html', error=error), 401
     
     # for GET requests
     if 'user_id' in session:
         # the user is already logged in so he should be redirected to teh dashboard
         return redirect(url_for('dashboard'))
-    
     return render_template('login.html')
 
 
@@ -106,7 +102,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-# dashboard and profile routes can be accessed using the general handler @serve below but as I'm using flask session to protect routes I'll implement routes for them to assert protection before redirecting to the React SPA, to render the dashboard there will be api requests to get data, api will be protected by session and send errors, react-router have upper level error route that will redirect to the landing page, a bad design because of the final project time limitation 
+
 @app.route('/dashboard')
 def dashboard():
     if "user_id" not in session:
@@ -143,18 +139,6 @@ def update_profile():
     return jsonify({'error': 'failed to update profile'}), 500
         
     
-def update_user_data(new_data):
-    try:
-        with open ('./database.json','r') as file:
-            data = json.load(file)
-        new_users_list = [user for user in data[new_data['role']+'s'] if user['id'] != new_data['id']]
-        new_users_list.append(new_data)
-        data[new_data['role']+'s'] = new_users_list
-        with open ('./database.json','w') as file:
-            json.dump(data, file, indent=4)
-        return True
-    except:
-        False
 
 
 @app.route('/api/dashboard')
@@ -163,21 +147,10 @@ def api_dashboard():
         user_data = get_user(session['user_role'], session['user_id'])
         if user_data is None:
             return jsonify({'error': 'user not found'}), 404
-        # to cover EPFL project requirements an instance of class will be used to get profile info via a method
         user = User(user_data['id'], user_data['name'], user_data['photo_path'], user_data['role'])
         return jsonify({'data':user.get_profile_info()}), 200
    
     return jsonify({'error': 'unauthorized'}), 401
-
-def get_user(role, id):
-    with open('./database.json','r') as file:
-        data = json.load(file)
-    # won't handle the case where the role is neither trainer nor trainee as session asserts that role won't be tampered
-    for record in data[role+'s']:
-        if record['id'] == id:
-            return record
-    # not found
-    return None
 
 
 # get all tracks
@@ -190,17 +163,6 @@ def api_get_tracks():
         data = json.load(file)
     return jsonify({'data': data['tracks']})
 
-# get track by id
-@app.route('/api/tracks/<id>', methods=['GET'])
-def api_get_track(id):
-    if not ('user_id' in session):
-        return jsonify({'error': 'unauthorized'}), 401
-    with open('./database.json','r') as file:
-        data = json.load(file)
-    for track in data['tracks']:
-        if track['id'] == id:
-            return jsonify({'data': track}), 200
-    return jsonify({'error': 'not found'}), 404
 
 
 # get overview
@@ -210,7 +172,6 @@ def api_get_overview():
         return jsonify({'error': 'unauthorized'}), 401
     with open('./database.json','r') as file:
         data = json.load(file)
-    # overview = [{info:{name,id,percentage},trainees:[{name,id,progress}]}]
     overview = []
     for track in data['tracks']:
         # calculate track progress
@@ -232,7 +193,6 @@ def api_get_overview():
     return jsonify({'data': overview}), 200        
     
 
-
     
 
 # add new track
@@ -248,11 +208,9 @@ def api_add_track():
             return jsonify({'error': f'Missing field: {field}'}), 400
     id = simple_generate_id()
     new_track = Track(id, data['title'], data['start_time'], data['duration_unit'], data['duration_value'], data['description'], data['trainers'], data['trainees'])
-    # add new track to db, using 'with' keyword will assert that python closes the file after reading or writing to it
     with open('./database.json','r') as file:
         database = json.load(file)
     database['tracks'].append(new_track.to_dict())
-    # should use update_status to check if the data was added correctly or not
     # add new track to trainers
     new_trainers_list,update_status = add_track_to_trainer(database['trainers'], id, data['trainers'])
     database['trainers'] = new_trainers_list
@@ -324,7 +282,6 @@ def api_remove_user_from_track(track_id, role, user_id):
                     break
     else:
         return jsonify({'error': 'invalid user'}), 400
-    
     # write changes to db
     with open('./database.json','w') as file:
         json.dump(data, file, indent=4)
@@ -341,7 +298,6 @@ def api_get_trainers():
     with open('./database.json','r') as file:
         data = json.load(file)
     track_id = request.args.get('track_id')
-    # should respond to the case where track_id is not valid, but as the api should be called from within the frontend app, i will assume that it is valid, all the trainers will be returned if track_id is not provided (in case of new track)
     if track_id is None or track_id not in data['tracks']:
         return jsonify({'data': data['trainers']}), 200
     return jsonify({'data': [trainer for trainer in data['trainers'] if trainer['id'] not in data['tracks'][track_id]['trainers']]}), 200
@@ -363,28 +319,7 @@ def api_get_trainees():
     return jsonify({'data': data['trainees']}), 200
 
 
-# get trainee by id
-@app.route('/api/trainees/<id>', methods=['GET'])
-def api_get_trainee(id):
-    if not ('user_id' in session):
-        return jsonify({'error': 'unauthorized'}), 401
-    with open('./database.json','r') as file:
-        data = json.load(file)
-    for trainee in data['trainees']:
-        if trainee['id'] == id:
-            return jsonify({'data': trainee}), 200 
-    return jsonify({'error': 'not found'}), 404
 
-
-def get_int_progress(input_string, progress_list, track_id):
-    try:
-        return int(input_string)
-    except (TypeError, ValueError):
-        for prog in progress_list:
-            if prog['track_id'] == track_id:
-                return int(prog['percentage'])
-        return 0
-    
 
 # update trainee progress, only trainee himself can update his progress (only for now)
 @app.route('/api/trainees/<id>/progress', methods=['POST'])
@@ -459,6 +394,20 @@ def add_track_to_trainee(list_to_be_modified, track_id, trainees_id_list):
     return list_to_be_modified, updated
         
 
+def update_user_data(new_data):
+    try:
+        with open ('./database.json','r') as file:
+            data = json.load(file)
+        new_users_list = [user for user in data[new_data['role']+'s'] if user['id'] != new_data['id']]
+        new_users_list.append(new_data)
+        data[new_data['role']+'s'] = new_users_list
+        with open ('./database.json','w') as file:
+            json.dump(data, file, indent=4)
+        return True
+    except:
+        False
+
+
 
 def add_user_to_track(list_to_be_modified, track_id,user_id,role):
     updated = False
@@ -470,6 +419,15 @@ def add_user_to_track(list_to_be_modified, track_id,user_id,role):
     return list_to_be_modified, updated
 
 
+def get_int_progress(input_string, progress_list, track_id):
+    try:
+        return int(input_string)
+    except (TypeError, ValueError):
+        for prog in progress_list:
+            if prog['track_id'] == track_id:
+                return int(prog['percentage'])
+        return 0
+    
 
 
 def validate_credentials(name,password):
@@ -480,6 +438,17 @@ def validate_credentials(name,password):
             if name == stored_username and hashed_pass == stored_password: 
                 return{ 'exists': True,'id':stored_id, 'role': stored_role}
     return {'exists': False, 'role': None,'id':None}
+
+
+def get_user(role, id):
+    with open('./database.json','r') as file:
+        data = json.load(file)
+    # won't handle the case where the role is neither trainer nor trainee as session asserts that role won't be tampered
+    for record in data[role+'s']:
+        if record['id'] == id:
+            return record
+    # not found
+    return None
 
 
 

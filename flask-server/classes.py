@@ -39,13 +39,13 @@ class Trainee(User):
         # Get the base profile info from the User class
         profile_info = super().get_profile_info()
         # Add progress information
-        profile_info['progress'] = [{"track_id": prog.track_id, "percentage": prog.percentage} for prog in self.progress]
+        profile_info['progress'] = [{"track_id": prog['track_id'], "percentage": prog['percentage']} for prog in self.progress]
         return profile_info
 
     def update_track_progress(self, track_id, new_percentage):
         for prog in self.progress:
-            if prog.track_id == track_id:
-                prog.percentage = new_percentage
+            if prog['track_id'] == track_id:
+                prog['percentage'] = new_percentage
                 return True
         return False  # Track not found in progress
     

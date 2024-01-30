@@ -11,11 +11,17 @@ After cloning the repo,
 ### Install dependencies
 
 - The dependencies for the "client" folder can be installed by running `npm install` after navigating into the folder.
-- The dependencies for the "flask_server" folder can be installed by running `pip install flask`, `pip install flask-cors`
+- The dependencies for the "flask_server" folder can be installed by running `pip install flask flask-cors python-dotenv`
+
+### Add environment variables
+
+- within client directory add .env file copy the content from .env.example and paste it into the .env file
+- within flask-server add .env file copy the content from .env.example and paste it into the .env file or create your own secret key
 
 ### Run the project
 
-- Within flask_sever directory run `flask --app main.py run`
+- Within client directory run `npm run build`, this step is optional as the build folder with the latest version is included
+- Within flask-sever directory run `flask --app main.py run`
 
 ## Project Checklist
 
@@ -23,13 +29,13 @@ After cloning the repo,
 - [x] It uses the Flask web framework.
 - [x] It uses at least one module from the Python Standard Library other than the random module.
       Please provide the name of the module you are using in your app.
-  - Module name: "flask_server\main.py"
-- [] It contains at least one class written by you that has both properties and methods. It uses `__init__()` to let the class initialize the object's attributes (note that `__init__()` doesn't count as a method). This includes instantiating the class and using the methods in your app. Please provide below the file name and the line number(s) of at least one example of a class definition in your code as well as the names of two properties and two methods.
+  - Module name: os, json, random, hashlib
+- [x] It contains at least one class written by you that has both properties and methods. It uses `__init__()` to let the class initialize the object's attributes (note that `__init__()` doesn't count as a method). This includes instantiating the class and using the methods in your app. Please provide below the file name and the line number(s) of at least one example of a class definition in your code as well as the names of two properties and two methods.
   - File name for the class definition: "flask_server\classes.py"
   - Line number(s) for the class definition: 3, 54
   - Name of two properties: User(id, name, photo_path, role), Track(id, title, start_time, duration, description, trainers, trainees)
-  - Name of two methods: User.get_profile_info()
-  - File name and line numbers where the methods are used: 167 @"main.py"
+  - Name of two methods: User.get_profile_info(), Trainee.update_track_progress(), Trainee.get_profile_info()
+  - File name and line numbers where the methods are used: 167, 399, 406 @"main.py"
 - [x] It makes use of JavaScript in the front end and uses the localStorage of the web browser.
 - [x] It uses modern JavaScript (for example, let and const rather than var).
 - [x] It makes use of the reading and writing to the same file feature.

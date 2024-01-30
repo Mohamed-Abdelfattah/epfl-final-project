@@ -1,4 +1,4 @@
-import { Form, useLoaderData, redirect, useActionData } from "react-router-dom";
+import { Form, useLoaderData, redirect } from "react-router-dom";
 
 export async function loader() {
   const { data: trainers } = await fetch(
@@ -24,49 +24,16 @@ export async function action({ request }) {
     },
     body: JSON.stringify(updates),
   }).then((res) => res.json());
-  console.log("@addTracks action ----- after submitting res =", res);
-  // if (!res.ok) {
-  //   return { error: true };
-  // }
+
   return redirect("/dashboard/tracks");
-  // console.log("@addTracks action ----- formData =");
-  // console.log(formData.get("start_time"), typeof formData.get("start_time"));
-  // console.log(formData.values());
-  // console.log(
-  //   "@addTracks action ----- updates.start_time =",
-  //   updates.start_time,
-  //   "type =",
-  //   typeof updates.start_time
-  // );
 }
 
 export default function AddTrack() {
   //
   const { trainers, trainees } = useLoaderData();
-  // const { error } = useActionData();
 
   return (
     <>
-      {/* <div
-        role="alert"
-        className={`alert alert-error +${!error ? "hidden" : ""}`}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="stroke-current shrink-0 h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <span>Error! Something went wrong, try again later.</span>
-      </div> */}
-
       <Form method="post" className="form-control w-full max-w-xs mx-auto">
         <label className="label">
           <span className="label-text">Title</span>

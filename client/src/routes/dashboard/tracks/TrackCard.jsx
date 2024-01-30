@@ -1,6 +1,7 @@
-import React from "react";
 import { useUserContext } from "../../../state/user/userContext";
-import { Form, useFetcher } from "react-router-dom";
+import { Form } from "react-router-dom";
+
+let trackIdToBeUpdated;
 
 export default function TrackCard({
   id,
@@ -11,7 +12,6 @@ export default function TrackCard({
 }) {
   //
   const { user } = useUserContext();
-  const fetcher = useFetcher();
   const isEnrolled = isEnrolledInTrack(user.id, trainers, trainees);
 
   const buttonTextAdd = user.role === "trainee" ? "Enroll" : "Supervise";
@@ -29,23 +29,26 @@ export default function TrackCard({
             <>
               <button
                 className="btn"
-                onClick={() =>
-                  document.getElementById("progress-modal").showModal()
-                }
+                onClick={() => {
+                  document.getElementById("progress-modal").showModal();
+                  trackIdToBeUpdated = id;
+                }}
+                disabled={!isEnrolled}
               >
                 Update Progress
               </button>
               <dialog
-                id="progress-modal"
+                id={`progress-modal`}
                 className="modal modal-bottom sm:modal-middle"
                 onSubmit={(e) => {
                   const form = e.target;
                   const formData = new FormData(form);
-                  console.log(formData);
-                  const progress = formData.get("progress");
-                  console.log(progress, typeof progress);
+                  formData.set("track_id", trackIdToBeUpdated);
                   // update progress in the backend
-                  fetcher;
+                  fetch(`/api/trainees/${user.id}/progress`, {
+                    method: "post",
+                    body: formData,
+                  });
                   form.reset();
                 }}
               >

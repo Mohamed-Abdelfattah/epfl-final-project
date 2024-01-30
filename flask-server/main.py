@@ -1,19 +1,20 @@
-from flask import Flask,send_from_directory,render_template, request, redirect, url_for,session,jsonify, make_response
+from flask import Flask,send_from_directory,render_template, request, redirect, url_for,session,jsonify
 import os
 import json
 from  hashlib import sha256
 from random import randint
 from flask_cors import CORS
-from classes import Track,User,Trainee,Trainer
+from dotenv import load_dotenv
+from classes import Track,User,Trainee
 from progress_calculator import calculate_progress
 
 
+load_dotenv()
 
 app = Flask(__name__, static_folder="../client/dist")
 
-app.secret_key = 'super_duper_secret_key_that_no_one_should_ever_know'
+app.secret_key = os.environ.get('SECRET_KEY')
 
-# app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 CORS(app, supports_credentials=True)
 
 
@@ -170,17 +171,12 @@ def api_dashboard():
 
 def get_user(role, id):
     with open('./database.json','r') as file:
-            data = json.load(file)
-    if role == 'trainer':
-        for record in data['trainers']:
-            if record['id'] == id:
-                return record
+        data = json.load(file)
     # won't handle the case where the role is neither trainer nor trainee as session asserts that role won't be tampered
-    else:
-        for record in data['trainees']:
-            if record['id'] == id:
-                return record
-    # user not found in database
+    for record in data[role+'s']:
+        if record['id'] == id:
+            return record
+    # not found
     return None
 
 
@@ -292,9 +288,6 @@ def api_add_user_to_track(track_id, role, user_id):
     else:
         return jsonify({'error': 'invalid user'}), 400
     # write changes to db
-    print('============================================\n')
-    print(type(data))
-    print('============================================\n')
     with open('./database.json','w') as file:
         json.dump(data, file, indent=4)
     return jsonify({'success': True}),201
@@ -383,24 +376,38 @@ def api_get_trainee(id):
     return jsonify({'error': 'not found'}), 404
 
 
-# update trainee progress
+def get_int_progress(input_string, progress_list, track_id):
+    try:
+        return int(input_string)
+    except (TypeError, ValueError):
+        for prog in progress_list:
+            if prog['track_id'] == track_id:
+                return int(prog['percentage'])
+        return 0
+    
+
+# update trainee progress, only trainee himself can update his progress (only for now)
 @app.route('/api/trainees/<id>/progress', methods=['POST'])
 def api_update_trainee_progress(id):
-    if not ('user_id' in session and session['user_id'] == id and session['user_role'] == 'trainee'):
+    if not ('user_id' in session and session['user_role'] == 'trainee'):
         return jsonify({'error': 'unauthorized'}), 401
-    updated_progress = request.form['progress']
+    trainee_data = get_user(session['user_role'], id)
     track_to_update = request.form['track_id']
+    # validate input and get the number
+    new_progress = get_int_progress(request.form['progress'],trainee_data['progress'],track_to_update)
+    trainee_instance = Trainee(trainee_data['id'], trainee_data['name'], trainee_data['photo_path'], trainee_data['role'], trainee_data['progress'])
+    update_status = trainee_instance.update_track_progress(track_to_update,new_progress)
+    # update database
     with open('./database.json','r') as file:
         data = json.load(file)
     for trainee in data['trainees']:
         if trainee['id'] == id:
-            for prog in trainee['progress']:
-                if prog['track_id'] == track_to_update:
-                    prog['percentage'] = updated_progress
-                    with open('./database.json','w') as file:
-                        json.dump(data, file, indent=4)
-                    return jsonify({'success': True}), 200
-    return jsonify({'error': 'not found'}), 404
+            data['trainees'].remove(trainee)
+            data['trainees'].append(trainee_instance.get_profile_info())
+            break 
+    with open('./database.json','w') as file:
+        json.dump(data, file, indent=4)
+    return jsonify({'success': True}), 200
 
 
 # add trainee to track
@@ -447,9 +454,7 @@ def add_track_to_trainee(list_to_be_modified, track_id, trainees_id_list):
     updated = False
     for trainee in list_to_be_modified:
         if trainee['id'] in trainees_id_list:  
-            print('*******************\n will update database[trainees] ------ trainee[progress]',trainee['progress'])
             trainee['progress'].append({'track_id':track_id,'percentage':0})
-            print('*******************\n after update database[trainees] ------ trainee[progress]',trainee['progress'])
             updated = True
     return list_to_be_modified, updated
         

@@ -18,22 +18,12 @@ export async function action({ request, params }) {
   const userId = formData.get("userId");
   const method = request.method;
 
-  console.log(
-    "@Tracks action ----- trackId =",
-    trackId,
-    "userId =",
-    userId,
-    "method =",
-    method
-  );
-
   const res = await fetch(
     `${import.meta.env.VITE_API_URL_NUM}/api/${trackId}/${role}/${userId}`,
     {
       method,
     }
   ).then((res) => res.json());
-  console.log("@Tracks action ----- res =", res);
 
   return redirect("/dashboard/tracks");
 }

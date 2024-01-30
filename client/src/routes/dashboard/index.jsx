@@ -8,7 +8,6 @@ export async function loader() {
   const { data } = await fetch(
     `${import.meta.env.VITE_API_URL_NUM}/api/dashboard`
   ).then((res) => res.json());
-  console.log("@Dashboard ---- loader function ----- data =", data);
   return data;
 }
 

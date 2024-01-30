@@ -8,7 +8,8 @@
             "tracks": [
                 "track1",
                 "track2",
-                "151733965"
+                "151733965",
+                "641023372"
             ]
         },
         {
@@ -26,7 +27,18 @@
             "photo_path": "/flask_assets/imagesDB/avatar-8.jpg",
             "role": "trainer",
             "tracks": [
-                "151733965"
+                "track1",
+                "track2",
+                "641023372"
+            ]
+        },
+        {
+            "id": "489121943",
+            "name": "Jo Jo",
+            "photo_path": "/flask_assets/imagesDB/avatar-6.jpg",
+            "role": "trainer",
+            "tracks": [
+                "641023372"
             ]
         }
     ],
@@ -39,12 +51,12 @@
             "duration_unit": "hours",
             "description": "Learn the fundamentals of web development, from HTML to advanced JavaScript.",
             "trainers": [
-                "t1"
+                "t1",
+                "626763029"
             ],
             "trainees": [
                 "trainee1",
-                "trainee2",
-                "529905125"
+                "trainee2"
             ],
             "milestones": [
                 {
@@ -83,7 +95,8 @@
             "duration_unit": "weeks",
             "description": "Explore data science fundamentals, including data analysis, machine learning, and data visualization.",
             "trainers": [
-                "t2"
+                "t2",
+                "626763029"
             ],
             "trainees": [
                 "trainee3",
@@ -113,10 +126,29 @@
             "duration_unit": "hours",
             "description": "ksack;kasl",
             "trainers": [
-                "t1",
-                "626763029"
+                "t1"
             ],
             "trainees": [
+                "529905125"
+            ],
+            "milestones": [],
+            "resources": []
+        },
+        {
+            "id": "641023372",
+            "title": "jiji",
+            "start_time": "2024-01-31T11:46:00.000Z",
+            "duration_unit": "weeks",
+            "duration_value": "90",
+            "description": "jcakcskajckaj",
+            "trainers": [
+                "t1",
+                "626763029",
+                "489121943"
+            ],
+            "trainees": [
+                "trainee1",
+                "trainee4",
                 "529905125"
             ],
             "milestones": [],
@@ -133,6 +165,10 @@
                 {
                     "track_id": "track1",
                     "percentage": 50
+                },
+                {
+                    "track_id": "641023372",
+                    "percentage": 0
                 }
             ]
         },
@@ -185,6 +221,10 @@
                 {
                     "track_id": "151733965",
                     "percentage": 0
+                },
+                {
+                    "track_id": "641023372",
+                    "percentage": 0
                 }
             ]
         },
@@ -196,15 +236,15 @@
             "progress": [
                 {
                     "track_id": "track2",
-                    "percentage": 0
-                },
-                {
-                    "track_id": "track1",
-                    "percentage": 0
+                    "percentage": 8
                 },
                 {
                     "track_id": "151733965",
                     "percentage": 0
+                },
+                {
+                    "track_id": "641023372",
+                    "percentage": 90
                 }
             ]
         }
